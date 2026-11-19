@@ -36,6 +36,8 @@ const SECRET_FILE = [
 ];
 
 const isHiddenBidi = (n: number) => (n >= 0x202a && n <= 0x202e) || (n >= 0x2066 && n <= 0x2069);
+// Zero-width space/joiners and byte-order marks hidden inside files.
+const isInvisible = (n: number) => (n >= 0x200b && n <= 0x200d) || n === 0xfeff;
 
 const REQUIRED_PERMISSIONS = ['android.permission.POST_NOTIFICATIONS', 'android.permission.VIBRATE'];
 const REQUIRED_BLOCKED = [
@@ -70,7 +72,7 @@ function walk(dir: string, out: string[] = []): string[] {
 
 function trackedFiles(): string[] {
   try {
-    const out = execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: 'utf8' });
+    const out = execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], { cwd: ROOT, encoding: 'utf8' });
     return out.split('\0').filter(Boolean);
   } catch {
     return walk(ROOT).map((f) => relative(ROOT, f).replace(/\\/g, '/'));
@@ -109,6 +111,10 @@ export function runSecurityCheck(): string[] {
       const code = text.charCodeAt(i);
       if (isHiddenBidi(code)) {
         problems.push(`${rel}:${lineOf(text, i)} hidden bidi control character`);
+        break;
+      }
+      if (isInvisible(code)) {
+        problems.push(`${rel}:${lineOf(text, i)} invisible character`);
         break;
       }
       if (code < 0x20 && code !== 0x09 && code !== 0x0a && code !== 0x0d) {
