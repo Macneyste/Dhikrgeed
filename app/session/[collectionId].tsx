@@ -97,6 +97,7 @@ export default function CounterScreen() {
     <Scene>
       {/* Tap area: everything above the cards. Pressable cancels when a scroll starts. */}
       <Pressable
+        testID="tap-area"
         style={StyleSheet.absoluteFill}
         onPress={complete ? undefined : s.tap}
         disabled={complete}
