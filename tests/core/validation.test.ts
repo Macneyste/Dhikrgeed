@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { routeFromNotificationData, safeRouteId } from '../../src/core/routes.ts';
+import { allowedIncomingPath, routeFromNotificationData, safeRouteId } from '../../src/core/routes.ts';
 import { isValidId, sanitizeText, validateCustomDhikr } from '../../src/core/validation.ts';
 
 test('valid custom dhikr is trimmed and accepted', () => {
@@ -53,4 +53,14 @@ test('notification routes are allowlisted', () => {
   assert.equal(routeFromNotificationData({ route: 'https://evil.example' }), null);
   assert.equal(routeFromNotificationData({ route: 'toString' }), null);
   assert.equal(routeFromNotificationData(null), null);
+});
+
+test('incoming deep links are allowlisted', () => {
+  assert.equal(allowedIncomingPath('dhikrgeed://session/tasbih'), '/session/tasbih');
+  assert.equal(allowedIncomingPath('/collection/custom:abc-1?x=1'), '/collection/custom:abc-1');
+  assert.equal(allowedIncomingPath('/prayers/'), '/prayers');
+  assert.equal(allowedIncomingPath('/session/..%2F..%2Fetc'), '/');
+  assert.equal(allowedIncomingPath('/session/Bad Id'), '/');
+  assert.equal(allowedIncomingPath('https://evil.example/x'), '/');
+  assert.equal(allowedIncomingPath('/%E0%A4%A'), '/');
 });

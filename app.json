@@ -57,7 +57,8 @@
           "icon": "./assets/adaptive-icon-monochrome.png",
           "color": "#2F6B3A"
         }
-      ]
+      ],
+      "./plugins/withNoInternetInRelease.js"
     ]
   }
 }

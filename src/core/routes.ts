@@ -19,3 +19,28 @@ export function safeRouteId(value: unknown): string | null {
   const v = Array.isArray(value) ? value[0] : value;
   return isValidId(v) ? v : null;
 }
+
+const STATIC_PATHS = new Set(['/', '/welcome', '/library', '/prayers', '/history', '/settings', '/custom-dhikr']);
+const ID_PATHS = /^\/(collection|session)\/([^/?#]+)$/;
+
+/**
+ * Validates a path arriving from outside the app (deep link or intent).
+ * Returns the path when it is on the allowlist, otherwise "/".
+ */
+export function allowedIncomingPath(raw: string): string {
+  let path = raw;
+  try {
+    // Accept "dhikrgeed://session/tasbih" as well as "/session/tasbih".
+    const schemeMatch = /^[a-z][a-z0-9+.-]*:\/\/(.*)$/i.exec(raw);
+    if (schemeMatch) path = `/${schemeMatch[1]}`;
+    path = decodeURIComponent(path.split(/[?#]/)[0] ?? '/');
+  } catch {
+    return '/';
+  }
+  path = path.replace(/\/{2,}/g, '/');
+  if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+  if (STATIC_PATHS.has(path)) return path;
+  const m = ID_PATHS.exec(path);
+  if (m && isValidId(m[2])) return `/${m[1]}/${m[2]}`;
+  return '/';
+}
