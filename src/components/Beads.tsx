@@ -122,7 +122,13 @@ export function BeadDrops({
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {drops.map((d) => (
-        <FallingBead key={d.key} phase={d.phase} from={from} to={to} onDone={() => setDrops((all) => all.filter((x) => x.key !== d.key))} />
+        <FallingBead
+          key={d.key}
+          phase={d.phase}
+          from={from}
+          to={to}
+          onDone={() => setDrops((all) => all.filter((x) => x.key !== d.key))}
+        />
       ))}
     </View>
   );
@@ -141,7 +147,12 @@ function FallingBead({
 }) {
   const [t] = useState(() => new Animated.Value(0));
   useEffect(() => {
-    const anim = Animated.timing(t, { toValue: 1, duration: 550, easing: Easing.in(Easing.quad), useNativeDriver: true });
+    const anim = Animated.timing(t, {
+      toValue: 1,
+      duration: 550,
+      easing: Easing.in(Easing.quad),
+      useNativeDriver: true,
+    });
     anim.start(({ finished }) => finished && onDone());
     return () => anim.stop();
     // onDone identity changes each render; the animation runs once per bead.

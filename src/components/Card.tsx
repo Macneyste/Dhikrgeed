@@ -34,7 +34,15 @@ export function Card({
   );
 }
 
-export function Chip({ label, color = colors.ink, background = 'rgba(255,255,255,0.8)' }: { label: string; color?: string; background?: string }) {
+export function Chip({
+  label,
+  color = colors.ink,
+  background = 'rgba(255,255,255,0.8)',
+}: {
+  label: string;
+  color?: string;
+  background?: string;
+}) {
   return (
     <View style={[styles.chip, { backgroundColor: background }]}>
       <AppText size={11} weight="extrabold" color={color} style={styles.chipText}>
@@ -56,8 +64,17 @@ export function InfoNote({ text }: { text: string }) {
 
 export function ProgressBar({ value, color = colors.primary }: { value: number; color?: string }) {
   return (
-    <View style={styles.track} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: Math.round(value * 100) }}>
-      <View style={[styles.fill, { width: `${Math.round(Math.max(0, Math.min(1, value)) * 100)}%`, backgroundColor: color }]} />
+    <View
+      style={styles.track}
+      accessibilityRole="progressbar"
+      accessibilityValue={{ min: 0, max: 100, now: Math.round(value * 100) }}
+    >
+      <View
+        style={[
+          styles.fill,
+          { width: `${Math.round(Math.max(0, Math.min(1, value)) * 100)}%`, backgroundColor: color },
+        ]}
+      />
     </View>
   );
 }
@@ -72,7 +89,13 @@ const styles = StyleSheet.create({
     ...shadow,
     shadowOpacity: 0.06,
   },
-  dashed: { borderStyle: 'dashed', borderWidth: 1.5, backgroundColor: colors.surfaceWarm, elevation: 0, shadowOpacity: 0 },
+  dashed: {
+    borderStyle: 'dashed',
+    borderWidth: 1.5,
+    backgroundColor: colors.surfaceWarm,
+    elevation: 0,
+    shadowOpacity: 0,
+  },
   chip: { alignSelf: 'center', borderRadius: radius.chip, paddingHorizontal: 14, paddingVertical: 6 },
   chipText: { letterSpacing: 1.3 },
   note: { backgroundColor: colors.amberSoft, borderRadius: 14, padding: 14 },

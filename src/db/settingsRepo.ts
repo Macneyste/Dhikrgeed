@@ -1,10 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-import {
-  DEFAULT_REMINDER_SETTINGS,
-  parseReminderSettings,
-  type ReminderSettings,
-} from '../core/reminders.ts';
+import { DEFAULT_REMINDER_SETTINGS, parseReminderSettings, type ReminderSettings } from '../core/reminders.ts';
 
 export interface AppSettings {
   onboarded: boolean;
@@ -34,7 +30,15 @@ export const DEFAULT_SETTINGS: AppSettings = {
   notificationsAsked: false,
 };
 
-const BOOL_KEYS = ['onboarded', 'largeText', 'haptics', 'transliteration', 'meaning', 'reducedMotion', 'notificationsAsked'] as const;
+const BOOL_KEYS = [
+  'onboarded',
+  'largeText',
+  'haptics',
+  'transliteration',
+  'meaning',
+  'reducedMotion',
+  'notificationsAsked',
+] as const;
 
 export async function loadSettings(db: SQLiteDatabase): Promise<AppSettings> {
   const rows = await db.getAllAsync<{ key: string; value: string }>('SELECT key, value FROM settings');

@@ -12,7 +12,8 @@
     "lint": "expo lint",
     "validate:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-content.ts",
     "security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/security-check.ts",
-    "check": "npm run typecheck && npm run lint && npm test && npm run validate:content && npm run security"
+    "check": "npm run typecheck && npm run lint && npm test && npm run validate:content && npm run security",
+    "format": "prettier --write \"app/**/*.tsx\" \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" \"tests/**/*.ts\""
   },
   "dependencies": {
     "@expo-google-fonts/amiri": "^0.4.1",
@@ -45,6 +46,7 @@
     "@types/react": "^19.3.0",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^58.0.4",
+    "prettier": "^3.10.1",
     "typescript": "^6.0.3"
   }
 }

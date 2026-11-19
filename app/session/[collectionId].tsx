@@ -114,12 +114,28 @@ export default function CounterScreen() {
         <IconButton icon="back" label="Dib u noqo" onPress={goHome} size={44} />
         <View style={styles.headerChip} accessibilityLiveRegion="polite" pointerEvents="none">
           <Chip
-            label={complete ? `DHAMMAYSTIRAN · ${done} / ${total}` : `DIKRI ${index + 1} / ${session.items.length} · ${done} / ${total}`}
+            label={
+              complete
+                ? `DHAMMAYSTIRAN · ${done} / ${total}`
+                : `DIKRI ${index + 1} / ${session.items.length} · ${done} / ${total}`
+            }
             color={complete ? colors.primary : phase.text}
           />
         </View>
-        <IconButton icon="undo" label="Ka noqo tirintii ugu dambaysay" onPress={s.undo} size={44} disabled={!canUndo(session)} />
-        <IconButton icon="reset" label="Dib u bilow wareeggan" onPress={() => setConfirmReset(true)} size={44} disabled={done === 0} />
+        <IconButton
+          icon="undo"
+          label="Ka noqo tirintii ugu dambaysay"
+          onPress={s.undo}
+          size={44}
+          disabled={!canUndo(session)}
+        />
+        <IconButton
+          icon="reset"
+          label="Dib u bilow wareeggan"
+          onPress={() => setConfirmReset(true)}
+          size={44}
+          disabled={done === 0}
+        />
       </View>
 
       {/* Dhikr text. Taps inside count; scrolling never does. */}
@@ -141,7 +157,12 @@ export default function CounterScreen() {
                   align="center"
                   style={styles.meaning}
                 />
-                <Pressable onPress={share} accessibilityRole="button" accessibilityLabel="La wadaag ajarka" style={styles.shareChip}>
+                <Pressable
+                  onPress={share}
+                  accessibilityRole="button"
+                  accessibilityLabel="La wadaag ajarka"
+                  style={styles.shareChip}
+                >
                   <Chip label="LA WADAAG · AJARKA LA WADAAG" color={colors.primary} />
                 </Pressable>
               </>
@@ -178,7 +199,12 @@ export default function CounterScreen() {
 
       <View style={[styles.string, { top: stringTop }]} pointerEvents="none">
         {!complete && (
-          <TasbihString width={width} phase={item.snapshot.phase} nextPhase={next?.snapshot.phase ?? null} remaining={remaining} />
+          <TasbihString
+            width={width}
+            phase={item.snapshot.phase}
+            nextPhase={next?.snapshot.phase ?? null}
+            remaining={remaining}
+          />
         )}
       </View>
 

@@ -12,7 +12,14 @@ export const grassOffset = (width: number) => (width * 62) / 390;
 
 export function Sky({ style }: { style?: StyleProp<ViewStyle> }) {
   return (
-    <Svg style={[StyleSheet.absoluteFill, style]} width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 10" accessible={false}>
+    <Svg
+      style={[StyleSheet.absoluteFill, style]}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="none"
+      viewBox="0 0 10 10"
+      accessible={false}
+    >
       <Defs>
         <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0" stopColor={colors.sky1} />
@@ -37,7 +44,15 @@ export function Ground({ width }: { width: number }) {
 }
 
 /** Full-screen sky with the hill and grass at the bottom. */
-export function Scene({ children, style, showGround = true }: { children?: ReactNode; style?: StyleProp<ViewStyle>; showGround?: boolean }) {
+export function Scene({
+  children,
+  style,
+  showGround = true,
+}: {
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  showGround?: boolean;
+}) {
   const { width } = useWindowDimensions();
   return (
     <View style={[styles.fill, style]}>

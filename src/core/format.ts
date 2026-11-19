@@ -45,7 +45,15 @@ export function startOfDay(date: Date): Date {
 }
 
 export function addDays(date: Date, days: number): Date {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() + days,
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+    date.getMilliseconds(),
+  );
 }
 
 /** "MAANTA", "SHALAY" or "19 Nofembar 2026" for older days. */

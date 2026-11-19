@@ -120,10 +120,7 @@ export function planReminders(input: PlanInput): PlannedReminder[] {
 }
 
 /** The next prayer after `now` across the given days, or null. */
-export function nextPrayer(
-  days: readonly PrayerTimes[],
-  now: Date,
-): { prayer: PrayerKey; at: Date } | null {
+export function nextPrayer(days: readonly PrayerTimes[], now: Date): { prayer: PrayerKey; at: Date } | null {
   let best: { prayer: PrayerKey; at: Date } | null = null;
   for (const times of days) {
     for (const prayer of PRAYER_KEYS) {

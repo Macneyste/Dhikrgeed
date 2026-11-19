@@ -31,7 +31,16 @@ const FG: Record<Variant, string> = {
   ghost: colors.primary,
 };
 
-export function Button({ label, onPress, variant = 'primary', height = 54, icon, disabled, style, accessibilityHint }: ButtonProps) {
+export function Button({
+  label,
+  onPress,
+  variant = 'primary',
+  height = 54,
+  icon,
+  disabled,
+  style,
+  accessibilityHint,
+}: ButtonProps) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -42,7 +51,11 @@ export function Button({ label, onPress, variant = 'primary', height = 54, icon,
       onPress={onPress}
       style={({ pressed }) => [
         styles.base,
-        { minHeight: Math.max(TOUCH, height), backgroundColor: BG[variant], opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
+        {
+          minHeight: Math.max(TOUCH, height),
+          backgroundColor: BG[variant],
+          opacity: disabled ? 0.5 : pressed ? 0.85 : 1,
+        },
         variant === 'secondary' && styles.outlined,
         style,
       ]}
@@ -84,7 +97,13 @@ export function IconButton({
       hitSlop={Math.max(0, (TOUCH - size) / 2)}
       style={({ pressed }) => [
         styles.icon,
-        { width: size, height: size, borderRadius: size / 2.6, backgroundColor: background, opacity: disabled ? 0.4 : pressed ? 0.7 : 1 },
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2.6,
+          backgroundColor: background,
+          opacity: disabled ? 0.4 : pressed ? 0.7 : 1,
+        },
       ]}
     >
       <Icon name={icon} size={Math.round(size * 0.5)} color={color} />

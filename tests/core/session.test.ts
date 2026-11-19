@@ -33,7 +33,10 @@ function tapN(session: Session, n: number): Session {
 test('one tap counts exactly one on the current item', () => {
   const r = tap(tasbih(), T0);
   assert.equal(r.accepted, true);
-  assert.deepEqual(r.session.items.map((i) => i.count), [1, 0, 0]);
+  assert.deepEqual(
+    r.session.items.map((i) => i.count),
+    [1, 0, 0],
+  );
 });
 
 test('reaching a target moves to the next item', () => {
@@ -54,7 +57,10 @@ test('33/33/34 totals 100 and completes the round', () => {
 
 test('extra taps never exceed targets', () => {
   const s = tapN(tasbih(), 150);
-  assert.deepEqual(s.items.map((i) => i.count), [33, 33, 34]);
+  assert.deepEqual(
+    s.items.map((i) => i.count),
+    [33, 33, 34],
+  );
   const r = tap(s, T0);
   assert.equal(r.accepted, false);
   assert.equal(r.session, s);
@@ -71,7 +77,10 @@ test('undo crosses back into the previous completed item', () => {
   const s = tapN(tasbih(), 33);
   assert.equal(currentIndex(s), 1);
   const r = undo(s, T0);
-  assert.deepEqual(r.session.items.map((i) => i.count), [32, 0, 0]);
+  assert.deepEqual(
+    r.session.items.map((i) => i.count),
+    [32, 0, 0],
+  );
   assert.equal(currentIndex(r.session), 0);
 });
 
@@ -107,9 +116,7 @@ test('the round keeps a snapshot independent of the source specs', () => {
 
 test('createSession rejects empty rounds and invalid targets', () => {
   assert.throws(() => createSession({ id: 's', collectionId: 'c', contentVersion: 1, items: [], now: T0 }));
-  assert.throws(() =>
-    createSession({ id: 's', collectionId: 'c', contentVersion: 1, items: [spec('a', 0)], now: T0 }),
-  );
+  assert.throws(() => createSession({ id: 's', collectionId: 'c', contentVersion: 1, items: [spec('a', 0)], now: T0 }));
 });
 
 test('tap gate locks taps during the transition window', () => {

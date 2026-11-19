@@ -79,9 +79,7 @@ export function tap(session: Session, now: Date): TapResult {
   if (session.status === 'completed' || index === -1) {
     return { session, accepted: false, itemCompleted: false, roundCompleted: false };
   }
-  const items = session.items.map((item, i) =>
-    i === index ? { ...item, count: item.count + 1 } : item,
-  );
+  const items = session.items.map((item, i) => (i === index ? { ...item, count: item.count + 1 } : item));
   const next = touch(session, items, now);
   const item = items[index]!;
   return {

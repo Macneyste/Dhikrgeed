@@ -46,10 +46,8 @@ export const ADHKAR: readonly Dhikr[] = [
   {
     id: 'antas-salam',
     label: 'Allaahumma antas-salaam',
-    arabic:
-      'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ',
-    transliteration:
-      'Allaahumma antas-salaam wa minkas-salaam, tabaarakta yaa dhal-jalaali wal-ikraam',
+    arabic: 'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ',
+    transliteration: 'Allaahumma antas-salaam wa minkas-salaam, tabaarakta yaa dhal-jalaali wal-ikraam',
     meaning:
       'Allaahow, adiga ayaa ah Nabadda, nabaddana adiga ayay kaa timaaddaa. Waad barakaysan tahay, Haybadda iyo Sharafta Lahow.',
     source: PENDING,
@@ -58,8 +56,7 @@ export const ADHKAR: readonly Dhikr[] = [
   {
     id: 'tahlil-full',
     label: 'Laa ilaaha illallaah…',
-    arabic:
-      'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
+    arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
     transliteration:
       'Laa ilaaha illallaahu waxdahu laa shariika lah, lahul-mulku wa lahul-xamdu wa huwa calaa kulli shay’in qadiir',
     meaning:
@@ -70,10 +67,8 @@ export const ADHKAR: readonly Dhikr[] = [
   {
     id: 'al-ikhlas',
     label: 'Suuratul-Ikhlaas',
-    arabic:
-      'قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ',
-    transliteration:
-      'Qul huwallaahu axad. Allaahus-samad. Lam yalid wa lam yuulad. Wa lam yakun lahu kufuwan axad.',
+    arabic: 'قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ',
+    transliteration: 'Qul huwallaahu axad. Allaahus-samad. Lam yalid wa lam yuulad. Wa lam yakun lahu kufuwan axad.',
     meaning:
       'Dheh: Isagu waa Allaah, Kali ah. Allaah waa Kan loo baahan yahay. Ma dhalin, lamana dhalin. Mana jiro wax la mid ah.',
     source: PENDING,
@@ -82,8 +77,7 @@ export const ADHKAR: readonly Dhikr[] = [
   {
     id: 'al-falaq',
     label: 'Suuratul-Falaq',
-    arabic:
-      'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِن شَرِّ مَا خَلَقَ ۝ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ',
+    arabic: 'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِن شَرِّ مَا خَلَقَ ۝ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ',
     transliteration:
       'Qul acuudhu birabbil-falaq. Min sharri maa khalaq. Wa min sharri ghaasiqin idhaa waqab. Wa min sharrin-naffaathaati fil-cuqad. Wa min sharri xaasidin idhaa xasad.',
     meaning:
@@ -106,8 +100,7 @@ export const ADHKAR: readonly Dhikr[] = [
   {
     id: 'bismillah-la-yadurru',
     label: 'Bismillaahil-ladhii laa yadurru',
-    arabic:
-      'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+    arabic: 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
     transliteration:
       'Bismillaahil-ladhii laa yadurru maca ismihi shay’un fil-ardi wa laa fis-samaa’i wa huwas-samiicul-caliim',
     meaning:

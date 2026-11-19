@@ -39,7 +39,8 @@ export function PhaseCards({ items, currentIndex }: { items: readonly SessionIte
               </View>
             );
           })}
-          {row.length < 3 && Array.from({ length: 3 - row.length }, (_, i) => <View key={`gap-${i}`} style={styles.gap} />)}
+          {row.length < 3 &&
+            Array.from({ length: 3 - row.length }, (_, i) => <View key={`gap-${i}`} style={styles.gap} />)}
         </View>
       ))}
     </View>
@@ -49,7 +50,14 @@ export function PhaseCards({ items, currentIndex }: { items: readonly SessionIte
 const styles = StyleSheet.create({
   wrap: { gap: 8 },
   row: { flexDirection: 'row', gap: 8 },
-  card: { flex: 1, borderRadius: 14, paddingHorizontal: 8, paddingVertical: 4, justifyContent: 'center', alignItems: 'center' },
+  card: {
+    flex: 1,
+    borderRadius: 14,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   active: { backgroundColor: '#FFFFFF' },
   done: { backgroundColor: 'rgba(255,255,255,0.82)' },
   pending: { backgroundColor: 'rgba(255,255,255,0.5)' },

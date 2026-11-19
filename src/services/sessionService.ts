@@ -10,13 +10,7 @@ import type { ItemSpec, Session } from '../core/types.ts';
 import { collectionItemSpecs, CONTENT_VERSION, getCollection } from '../content/index.ts';
 import { getDatabase } from '../db/database';
 import { customIdFromCollection, customItemSpecs, getCustomDhikr } from '../db/customDhikrRepo';
-import {
-  getActiveSession,
-  getSession,
-  insertSession,
-  RevisionConflictError,
-  saveSession,
-} from '../db/sessionRepo';
+import { getActiveSession, getSession, insertSession, RevisionConflictError, saveSession } from '../db/sessionRepo';
 
 const queue = createSerialQueue();
 
@@ -105,7 +99,12 @@ export async function peekActiveSession(collectionId: string): Promise<Session |
 export function tapSession(sessionId: string): Promise<MutationResult> {
   return mutate(sessionId, (s, now) => {
     const r = tap(s, now);
-    return { session: r.session, changed: r.accepted, itemCompleted: r.itemCompleted, roundCompleted: r.roundCompleted };
+    return {
+      session: r.session,
+      changed: r.accepted,
+      itemCompleted: r.itemCompleted,
+      roundCompleted: r.roundCompleted,
+    };
   });
 }
 

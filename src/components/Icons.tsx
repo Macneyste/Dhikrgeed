@@ -41,7 +41,17 @@ const PATHS: Record<IconName, string[]> = {
   alert: ['M12 7.5 V13', 'M12 16.5 V16.6'],
 };
 
-export function Icon({ name, size = 24, color = colors.ink, strokeWidth = 2 }: { name: IconName; size?: number; color?: string; strokeWidth?: number }) {
+export function Icon({
+  name,
+  size = 24,
+  color = colors.ink,
+  strokeWidth = 2,
+}: {
+  name: IconName;
+  size?: number;
+  color?: string;
+  strokeWidth?: number;
+}) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" accessible={false}>
       {name === 'settings' && <Circle cx={12} cy={12} r={5.5} stroke={color} strokeWidth={strokeWidth} fill="none" />}
@@ -49,7 +59,15 @@ export function Icon({ name, size = 24, color = colors.ink, strokeWidth = 2 }: {
       {name === 'search' && <Circle cx={11} cy={11} r={6.5} stroke={color} strokeWidth={strokeWidth} fill="none" />}
       {name === 'alert' && <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={strokeWidth} fill="none" />}
       {PATHS[name].map((d) => (
-        <Path key={d} d={d} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <Path
+          key={d}
+          d={d}
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
       ))}
     </Svg>
   );

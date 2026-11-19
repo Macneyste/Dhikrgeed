@@ -46,8 +46,7 @@ export interface CustomDhikrValue {
 export type CustomDhikrField = 'title' | 'text' | 'meaning' | 'target';
 
 export type ValidationResult =
-  | { ok: true; value: CustomDhikrValue }
-  | { ok: false; errors: Partial<Record<CustomDhikrField, string>> };
+  { ok: true; value: CustomDhikrValue } | { ok: false; errors: Partial<Record<CustomDhikrField, string>> };
 
 const length = (s: string) => Array.from(s).length;
 

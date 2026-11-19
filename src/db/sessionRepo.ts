@@ -73,7 +73,12 @@ async function hydrate(db: SQLiteDatabase, rows: SessionRow[]): Promise<Session[
     'SELECT * FROM session_items WHERE session_id IN (' + placeholders + ')',
     rows.map((r) => r.id),
   );
-  return rows.map((row) => build(row, items.filter((i) => i.session_id === row.id)));
+  return rows.map((row) =>
+    build(
+      row,
+      items.filter((i) => i.session_id === row.id),
+    ),
+  );
 }
 
 export async function getSession(db: SQLiteDatabase, id: string): Promise<Session | null> {

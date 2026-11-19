@@ -72,7 +72,10 @@ function walk(dir: string, out: string[] = []): string[] {
 
 function trackedFiles(): string[] {
   try {
-    const out = execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], { cwd: ROOT, encoding: 'utf8' });
+    const out = execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+    });
     return out.split('\0').filter(Boolean);
   } catch {
     return walk(ROOT).map((f) => relative(ROOT, f).replace(/\\/g, '/'));

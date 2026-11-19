@@ -2,13 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createTapGate, tap as coreTap } from '../core/session.ts';
 import type { Session } from '../core/types.ts';
-import {
-  openSession,
-  resetSession,
-  tapSession,
-  undoSession,
-  type MutationResult,
-} from '../services/sessionService';
+import { openSession, resetSession, tapSession, undoSession, type MutationResult } from '../services/sessionService';
 
 export interface TapEvent {
   /** Increments on every saved tap, for animations. */

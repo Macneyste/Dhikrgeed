@@ -19,7 +19,10 @@ export function AppText({ size = 15, weight = 'regular', color = colors.ink, ali
   return (
     <Text
       maxFontSizeMultiplier={1.6}
-      style={[{ fontFamily: fonts[weight], fontSize, color, textAlign: align, lineHeight: Math.round(fontSize * 1.4) }, style]}
+      style={[
+        { fontFamily: fonts[weight], fontSize, color, textAlign: align, lineHeight: Math.round(fontSize * 1.4) },
+        style,
+      ]}
       {...rest}
     />
   );
@@ -28,7 +31,12 @@ export function AppText({ size = 15, weight = 'regular', color = colors.ink, ali
 const charRange = (from: number, to: number) => String.fromCharCode(from) + '-' + String.fromCharCode(to);
 // Arabic, Arabic Supplement and Arabic Presentation Forms A/B.
 const ARABIC_CHARS = new RegExp(
-  '[' + charRange(0x0600, 0x06ff) + charRange(0x0750, 0x077f) + charRange(0xfb50, 0xfdff) + charRange(0xfe70, 0xfefc) + ']',
+  '[' +
+    charRange(0x0600, 0x06ff) +
+    charRange(0x0750, 0x077f) +
+    charRange(0xfb50, 0xfdff) +
+    charRange(0xfe70, 0xfefc) +
+    ']',
 );
 
 export const hasArabic = (s: string) => ARABIC_CHARS.test(s);

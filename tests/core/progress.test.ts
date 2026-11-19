@@ -4,8 +4,20 @@ import { test } from 'node:test';
 import { progress, treeLayers, treeStage } from '../../src/core/progress.ts';
 
 test('progress is Σ min(count, target) / Σ target', () => {
-  assert.equal(progress([{ count: 33, target: 33 }, { count: 17, target: 67 }]), 0.5);
-  assert.equal(progress([{ count: 50, target: 10 }, { count: 0, target: 10 }]), 0.5);
+  assert.equal(
+    progress([
+      { count: 33, target: 33 },
+      { count: 17, target: 67 },
+    ]),
+    0.5,
+  );
+  assert.equal(
+    progress([
+      { count: 50, target: 10 },
+      { count: 0, target: 10 },
+    ]),
+    0.5,
+  );
   assert.equal(progress([]), 0);
 });
 
