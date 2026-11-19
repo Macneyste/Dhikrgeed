@@ -9,10 +9,9 @@ export const LIMITS = {
 } as const;
 
 // C0/C1 control characters except tab (\t) and newline (\n).
-// eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g;
 // Bidi embedding/override/isolate characters that can disguise text direction.
-const BIDI = /[‪-‮⁦-⁩]/g;
+const BIDI = /[\u202A-\u202E\u2066-\u2069]/g;
 
 /** Removes control and bidi-override characters, normalises line breaks and trims. */
 export function sanitizeText(value: string, multiline: boolean): string {
