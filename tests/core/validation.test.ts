@@ -32,7 +32,9 @@ test('length limits are enforced', () => {
 });
 
 test('control and bidi-override characters are removed', () => {
-  assert.equal(sanitizeText('a‮b\u0007c⁦d', false), 'abcd');
+  const rlo = String.fromCharCode(0x202e);
+  const lri = String.fromCharCode(0x2066);
+  assert.equal(sanitizeText(`a${rlo}b\u0007c${lri}d`, false), 'abcd');
   assert.equal(sanitizeText('line1\r\n\n\n\nline2', true), 'line1\n\nline2');
   assert.equal(sanitizeText('one\ntwo', false), 'one two');
 });
