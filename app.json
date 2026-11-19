@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Dhikrgeed",
+    "slug": "dhikrgeed",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "dhikrgeed",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFF6EF",
+    "platforms": ["android"],
+    "android": {
+      "package": "app.dhikrgeed",
+      "versionCode": 1,
+      "allowBackup": false,
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["android.permission.POST_NOTIFICATIONS", "android.permission.VIBRATE"],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.READ_CONTACTS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ]
+    },
+    "plugins": ["expo-router", "expo-sqlite", "expo-font", "expo-splash-screen"]
+  }
+}
