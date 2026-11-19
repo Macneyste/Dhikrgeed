@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AppEffects } from '@/components/AppEffects';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Scene } from '@/components/Scene';
@@ -65,6 +66,7 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       {boot.state === 'ready' ? (
         <SettingsProvider initial={boot.settings}>
+          <AppEffects />
           <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.sky1 } }} />
         </SettingsProvider>
       ) : (

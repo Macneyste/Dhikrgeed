@@ -8,10 +8,12 @@ import { CollectionCard, Grid } from '@/components/CollectionCard';
 import { MiniScene } from '@/components/Scene';
 import { SectionTitle, Screen } from '@/components/Screen';
 import { Tree } from '@/components/Tree';
+import { formatTime } from '@/core/format';
 import { progress } from '@/core/progress';
 import { currentIndex, totalCount, totalTarget } from '@/core/session';
 import type { Session } from '@/core/types';
 import { continueSession, statusFor, useOverview } from '@/hooks/useOverview';
+import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { useSettings } from '@/hooks/useSettings';
 import { collectionTitle } from '@/services/collections';
 import { colors } from '@/theme/theme';
@@ -26,6 +28,7 @@ export default function HomeScreen() {
   const { overview } = useOverview();
   const { settings } = useSettings();
   const resume = continueSession(overview);
+  const prayer = usePrayerTimes();
 
   return (
     <Screen
@@ -40,6 +43,21 @@ export default function HomeScreen() {
         />
       }
     >
+      {prayer.next && (
+        <Card
+          onPress={() => router.push('/prayers')}
+          style={styles.prayer}
+          accessibilityLabel={`Salaadda xigta: ${prayer.next.name}, ${formatTime(prayer.next.at)}, ${prayer.next.countdown}`}
+        >
+          <AppText size={11} weight="extrabold" color={colors.amberText} style={styles.eyebrow}>
+            SALAADDA XIGTA
+          </AppText>
+          <AppText size={17} weight="extrabold">
+            {prayer.next.name} · {formatTime(prayer.next.at)} · {prayer.next.countdown}
+          </AppText>
+        </Card>
+      )}
+
       {resume && <ContinueCard session={resume} reducedMotion={settings.reducedMotion} />}
 
       <SectionTitle>Adkaarta maanta</SectionTitle>
@@ -104,6 +122,7 @@ function ContinueCard({ session: s, reducedMotion }: { session: Session; reduced
 }
 
 const styles = StyleSheet.create({
+  prayer: { backgroundColor: colors.amberSoft, borderColor: colors.amberSoft, gap: 2 },
   continue: { flexDirection: 'row', gap: 14, alignItems: 'center' },
   continueText: { flex: 1, gap: 4 },
   eyebrow: { letterSpacing: 1.3 },
