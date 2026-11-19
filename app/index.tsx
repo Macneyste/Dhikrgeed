@@ -1,6 +1,9 @@
 import { Redirect } from 'expo-router';
 
-// Temporary entry until the home screen lands: open the tasbih counter.
+import { useSettings } from '@/hooks/useSettings';
+
+/** Entry: welcome once, then home (which offers to resume an active round). */
 export default function Index() {
-  return <Redirect href="/session/tasbih" />;
+  const { settings } = useSettings();
+  return <Redirect href={settings.onboarded ? '/(tabs)' : '/welcome'} />;
 }
