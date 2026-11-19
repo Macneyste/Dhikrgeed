@@ -1,9 +1,6 @@
-import { Text, View } from 'react-native';
+import { Redirect } from 'expo-router';
 
+// Temporary entry until the home screen lands: open the tasbih counter.
 export default function Index() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Dhikrgeed</Text>
-    </View>
-  );
+  return <Redirect href="/session/tasbih" />;
 }
