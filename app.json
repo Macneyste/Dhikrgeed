@@ -4,16 +4,22 @@
     "slug": "dhikrgeed",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "scheme": "dhikrgeed",
     "userInterfaceStyle": "light",
     "backgroundColor": "#FFF6EF",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "android": {
       "package": "app.dhikrgeed",
       "versionCode": 1,
       "allowBackup": false,
       "predictiveBackGestureEnabled": false,
-      "permissions": ["android.permission.POST_NOTIFICATIONS", "android.permission.VIBRATE"],
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.VIBRATE"
+      ],
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.CAMERA",
@@ -26,8 +32,25 @@
         "android.permission.READ_MEDIA_IMAGES",
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.SCHEDULE_EXACT_ALARM"
-      ]
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "monochromeImage": "./assets/adaptive-icon-monochrome.png",
+        "backgroundColor": "#FCE8DD"
+      }
     },
-    "plugins": ["expo-router", "expo-sqlite", "expo-font", "expo-splash-screen"]
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#FFF6EF"
+        }
+      ]
+    ]
   }
 }
