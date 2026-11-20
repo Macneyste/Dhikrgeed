@@ -22,9 +22,9 @@ export function useVolumeKeys(enabled: boolean, handlers: VolumeKeyHandlers): vo
     latest.current = handlers;
   });
 
-  const [foreground, setForeground] = useState(AppState.currentState === 'active');
+  const [foreground, setForeground] = useState(AppState.currentState !== 'background');
   useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => setForeground(state === 'active'));
+    const sub = AppState.addEventListener('change', (state) => setForeground(state !== 'background'));
     return () => sub.remove();
   }, []);
 
