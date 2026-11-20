@@ -41,3 +41,17 @@ export function compassPoint(bearing: number): string {
   ];
   return names[Math.round((((bearing % 360) + 360) % 360) / 45) % 8]!;
 }
+
+/**
+ * Magnetic heading 0..360 of the top edge of an Android phone lying flat,
+ * from raw magnetometer x/y (device axes: x right, y toward the top).
+ */
+export function headingFromMagnetometer(x: number, y: number): number {
+  return (deg(Math.atan2(-x, y)) + 360) % 360;
+}
+
+/** Smooths noisy headings on the circle (no jump at 359 → 0). */
+export function smoothHeading(previous: number | null, next: number, factor = 0.2): number {
+  if (previous === null) return next;
+  return (previous + factor * turnToQibla(next, previous) + 360) % 360;
+}

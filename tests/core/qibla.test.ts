@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { compassPoint, KAABA, qiblaBearing, turnToQibla } from '../../src/core/qibla.ts';
+import {
+  compassPoint,
+  headingFromMagnetometer,
+  KAABA,
+  qiblaBearing,
+  smoothHeading,
+  turnToQibla,
+} from '../../src/core/qibla.ts';
 
 /** Independent check: bearing from 3-D unit vectors (north and east tangent vectors). */
 function vectorBearing(lat: number, lng: number): number {
@@ -55,4 +62,17 @@ test('turn and compass point', () => {
   assert.equal(compassPoint(0), 'Waqooyi');
   assert.equal(compassPoint(119), 'Koonfur-Bari');
   assert.equal(compassPoint(338), 'Waqooyi');
+});
+
+test('heading from the magnetometer follows Android device axes', () => {
+  assert.equal(headingFromMagnetometer(0, 30), 0); // top points north
+  assert.equal(Math.round(headingFromMagnetometer(-30, 0)), 90); // top points east
+  assert.equal(Math.round(headingFromMagnetometer(0, -30)), 180);
+  assert.equal(Math.round(headingFromMagnetometer(30, 0)), 270);
+});
+
+test('smoothing moves the short way round', () => {
+  assert.equal(smoothHeading(null, 10), 10);
+  assert.ok(Math.abs(smoothHeading(350, 10, 0.5) - 0) < 1e-9);
+  assert.ok(Math.abs(smoothHeading(10, 350, 0.5) - 0) < 1e-9);
 });

@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Modal, Pressable, ScrollView, StyleSheet, Switch, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -202,6 +203,15 @@ export default function PrayersScreen() {
           <InfoNote text="Ogeysiisyada waa xiran yihiin. Taabo si aad uga furto dejinta telefoonka." />
         </Pressable>
       )}
+
+      <Card onPress={() => router.push('/qibla')} accessibilityLabel="Qibladda: jihada Kacbada">
+        <AppText size={15} weight="bold">
+          Qibladda
+        </AppText>
+        <AppText size={13} color={colors.soft}>
+          Jihada Kacbada ee magaaladaada, compass la socda.
+        </AppText>
+      </Card>
 
       <AppText size={12.5} color={colors.soft} align="center">
         Waxaa laga xisaabiyaa magaalada aad dooratay, internet la&apos;aan.

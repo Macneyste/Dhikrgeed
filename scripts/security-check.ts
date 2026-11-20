@@ -52,6 +52,8 @@ const REQUIRED_BLOCKED = [
   'READ_MEDIA_IMAGES',
   'SYSTEM_ALERT_WINDOW',
   'SCHEDULE_EXACT_ALARM',
+  'ACTIVITY_RECOGNITION',
+  'HIGH_SAMPLING_RATE_SENSORS',
 ].map((p) => `android.permission.${p}`);
 
 function walk(dir: string, out: string[] = []): string[] {
