@@ -10,13 +10,14 @@
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"tests/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
-    "validate:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-content.ts",
+    "validate:content": "npm run build:content --silent -- --check && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-content.ts",
     "security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/security-check.ts",
     "check": "npm run typecheck && npm run lint && npm test && npm run test:components && npm run validate:content && npm run security",
     "format": "prettier --write \"app/**/*.tsx\" \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" \"tests/**/*.ts\"",
     "test:components": "jest",
     "setup:hooks": "git config core.hooksPath .githooks",
-    "fonts:subset": "node scripts/subset-fonts.mjs"
+    "fonts:subset": "node scripts/subset-fonts.mjs",
+    "build:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-content.ts"
   },
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",

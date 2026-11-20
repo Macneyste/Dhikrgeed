@@ -26,7 +26,7 @@ Content must never be written from memory.
 2. Arabic text, transliteration, Somali meaning and count must match that source.
 3. New or changed entries start as `reviewStatus: 'draft'`.
 4. A reviewer with suitable knowledge checks the entry and, in a separate commit, sets `reviewStatus: 'reviewed'`. The pull request must say who reviewed it.
-5. Bump `CONTENT_VERSION` in `src/content/collections.ts` when bundled text or targets change. Running rounds keep their own snapshot, so nobody's count changes mid-round.
+5. Content lives in JSON packs, `src/content/packs/<pack>.json` (schema: `docs/content-schema.json`). Bump the pack's `version` when its text or targets change, then run `npm run build:content` and commit both the JSON and `src/content/packs.generated.ts`. Running rounds keep their own snapshot, so nobody's count changes mid-round.
 6. Ids are permanent. Never rename or reuse a dhikr or collection id.
 
 `npm run validate:content -- --release` must pass before a public release.

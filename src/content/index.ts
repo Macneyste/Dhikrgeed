@@ -1,9 +1,9 @@
 import type { ItemSpec } from '../core/types.ts';
-import { ADHKAR } from './adhkar.ts';
-import { COLLECTIONS, CONTENT_VERSION } from './collections.ts';
+// Bundled content comes from the JSON packs in ./packs (see scripts/build-content.ts).
+import { ADHKAR, COLLECTIONS, CONTENT_VERSION, PACKS } from './packs.generated.ts';
 import type { Collection, Dhikr } from './types.ts';
 
-export { ADHKAR, COLLECTIONS, CONTENT_VERSION };
+export { ADHKAR, COLLECTIONS, CONTENT_VERSION, PACKS };
 export type { Collection, Dhikr };
 
 export function getDhikr(id: string): Dhikr | undefined {

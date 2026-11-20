@@ -1,0 +1,2 @@
+# Generated from src/content/packs/*.json by npm run build:content
+src/content/packs.generated.ts

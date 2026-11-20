@@ -1,11 +1,10 @@
-// Checks bundled adhkar and collections.
+// Checks bundled adhkar and collections (from src/content/packs/*.json).
 //   node scripts/validate-content.ts            structural checks
 //   node scripts/validate-content.ts --release  also fails while any entry is a draft
 
 import { pathToFileURL } from 'node:url';
 
-import { ADHKAR } from '../src/content/adhkar.ts';
-import { COLLECTIONS } from '../src/content/collections.ts';
+import { ADHKAR, COLLECTIONS } from '../src/content/packs.generated.ts';
 import { PHASES } from '../src/core/types.ts';
 import { ID_PATTERN } from '../src/core/validation.ts';
 
