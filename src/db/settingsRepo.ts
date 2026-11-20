@@ -20,6 +20,12 @@ export interface AppSettings {
   notificationsAsked: boolean;
   /** Days added to the Umm al-Qura date for local moon sighting. */
   hijriAdjust: HijriAdjustment;
+  /** Ramadan mode (Suxuur/Afur card, Taraawiix). Off unless the person turns it on. */
+  ramadan: boolean;
+  /** Hijri year in which the Ramadan suggestion was answered, so it is asked once. */
+  ramadanAskedYear: number | null;
+  /** JSON TaraawiixState. */
+  taraawiix: string | null;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -35,6 +41,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
   reminders: DEFAULT_REMINDER_SETTINGS,
   notificationsAsked: false,
   hijriAdjust: 0,
+  ramadan: false,
+  ramadanAskedYear: null,
+  taraawiix: null,
 };
 
 const BOOL_KEYS = [
@@ -45,6 +54,7 @@ const BOOL_KEYS = [
   'meaning',
   'reducedMotion',
   'volumeKeys',
+  'ramadan',
   'notificationsAsked',
 ] as const;
 
@@ -61,6 +71,9 @@ export async function loadSettings(db: SQLiteDatabase): Promise<AppSettings> {
   out.customCity = map.get('customCity') ?? null;
   const adjust = Number(map.get('hijriAdjust'));
   if (HIJRI_ADJUSTMENTS.includes(adjust as HijriAdjustment)) out.hijriAdjust = adjust as HijriAdjustment;
+  const asked = Number(map.get('ramadanAskedYear'));
+  if (Number.isInteger(asked) && asked >= 1356 && asked <= 1500) out.ramadanAskedYear = asked;
+  out.taraawiix = map.get('taraawiix') ?? null;
   return out;
 }
 

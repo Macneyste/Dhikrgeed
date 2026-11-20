@@ -9,6 +9,8 @@ import { useSettings } from './useSettings';
 export interface PrayerInfo {
   city: City;
   today: PrayerTimes;
+  tomorrow: PrayerTimes;
+  now: Date;
   next: { prayer: PrayerKey; name: string; at: Date; countdown: string } | null;
 }
 
@@ -32,6 +34,8 @@ export function usePrayerTimes(): PrayerInfo {
   return {
     city,
     today: days[0]!,
+    tomorrow: days[1]!,
+    now,
     next: n
       ? {
           prayer: n.prayer,

@@ -18,7 +18,7 @@ import { backupSummary, type Backup } from '@/core/backup';
 import { exportBackup, pickBackup, restoreBackup } from '@/services/backup';
 import { colors } from '@/theme/theme';
 
-type BoolKey = 'largeText' | 'haptics' | 'volumeKeys' | 'transliteration' | 'meaning' | 'reducedMotion';
+type BoolKey = 'largeText' | 'haptics' | 'volumeKeys' | 'transliteration' | 'meaning' | 'reducedMotion' | 'ramadan';
 
 const READING: { key: BoolKey; title: string; description: string }[] = [
   { key: 'largeText', title: 'Qoraal weyn', description: 'Qoraalka oo dhan ayaa la weyneynayaa.' },
@@ -34,6 +34,11 @@ const READING: { key: BoolKey; title: string; description: string }[] = [
     key: 'reducedMotion',
     title: 'Dhaqdhaqaaq yar',
     description: 'Dhibcaha dhacaya iyo isbeddelada geedka waa la joojinayaa.',
+  },
+  {
+    key: 'ramadan',
+    title: 'Habka Ramadaan',
+    description: 'Waqtiyada Suxuurta iyo Afurka, iyo tiriyaha Taraawiixda ee bogga hore.',
   },
 ];
 

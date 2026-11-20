@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { IconButton } from '@/components/Button';
 import { Card, ProgressBar } from '@/components/Card';
+import { RamadanCards } from '@/components/RamadanCards';
 import { CollectionCard, Grid } from '@/components/CollectionCard';
 import { MiniScene } from '@/components/Scene';
 import { SectionTitle, Screen } from '@/components/Screen';
@@ -59,6 +60,8 @@ export default function HomeScreen() {
           </AppText>
         </Card>
       )}
+
+      <RamadanCards prayer={prayer} />
 
       {resume && <ContinueCard session={resume} reducedMotion={settings.reducedMotion} />}
 
