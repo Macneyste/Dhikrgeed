@@ -1,7 +1,7 @@
 import { useKeepAwake } from 'expo-keep-awake';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText, ArabicText, hasArabic } from '@/components/AppText';
@@ -13,11 +13,13 @@ import { Sheet, Toast } from '@/components/Overlays';
 import { PhaseCards } from '@/components/PhaseCards';
 import { grassOffset, groundHeight, Scene } from '@/components/Scene';
 import { Tree } from '@/components/Tree';
+import { countAnnouncement } from '@/core/announce';
 import { progress } from '@/core/progress';
 import { safeRouteId } from '@/core/routes';
 import { canUndo, currentIndex, totalCount, totalTarget } from '@/core/session';
 import { useSession } from '@/hooks/useSession';
 import { useSettings } from '@/hooks/useSettings';
+import { useVolumeKeys } from '@/hooks/useVolumeKeys';
 import { collectionTitle } from '@/services/collections';
 import { playHaptic } from '@/services/haptics';
 import { colors, phaseColors } from '@/theme/theme';
@@ -48,6 +50,18 @@ export default function CounterScreen() {
   useEffect(() => {
     if (undoSeq > 0) playHaptic('undo', settings.haptics);
   }, [undoSeq, settings.haptics]);
+
+  // Screen reader: every 10th count, each item change and the round's end.
+  const announced = useRef(0);
+  useEffect(() => {
+    if (!lastTap || !s.session || lastTap.seq === announced.current) return;
+    announced.current = lastTap.seq;
+    const message = countAnnouncement(s.session, lastTap);
+    if (message) AccessibilityInfo.announceForAccessibility(message);
+  }, [lastTap, s.session]);
+
+  // Volume Down counts and Volume Up undoes, while this screen is focused.
+  useVolumeKeys(settings.volumeKeys && s.session !== null, { down: s.tap, up: s.undo });
 
   // Layout: tree soil sits on the first grass layer.
   const groundTop = height - groundHeight(width);
@@ -114,7 +128,7 @@ export default function CounterScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 8 }]} pointerEvents="box-none">
         <IconButton icon="back" label="Dib u noqo" onPress={goHome} size={44} />
-        <View style={styles.headerChip} accessibilityLiveRegion="polite" pointerEvents="none">
+        <View style={styles.headerChip} pointerEvents="none">
           <Chip
             label={
               complete

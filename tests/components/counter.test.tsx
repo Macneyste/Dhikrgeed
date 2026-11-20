@@ -13,6 +13,8 @@ jest.mock('@/services/sessionService', () => require('./fakeSessionService'));
 let mockCollectionId = 'tasbih';
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ collectionId: mockCollectionId }),
+  // The screen is always focused in these tests.
+  useFocusEffect: (effect: () => void | (() => void)) => require('react').useEffect(effect, [effect]),
   router: { back: jest.fn(), replace: jest.fn(), push: jest.fn(), canGoBack: () => true },
 }));
 
