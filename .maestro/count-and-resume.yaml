@@ -1,0 +1,17 @@
+appId: app.dhikrgeed
+name: Count 40, kill the app, relaunch, still 40
+---
+- runFlow: subflows/fresh-start.yaml
+- runFlow: subflows/open-tasbih.yaml
+- runFlow: subflows/tap-33.yaml
+- assertVisible: "DIKRI 2 / 3 · 33 / 100"
+- repeat:
+    times: 7
+    commands:
+      - tapOn:
+          id: "tap-area"
+- assertVisible: "DIKRI 2 / 3 · 40 / 100"
+- stopApp
+- launchApp
+- runFlow: subflows/open-tasbih.yaml
+- assertVisible: "DIKRI 2 / 3 · 40 / 100"

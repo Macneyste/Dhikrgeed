@@ -1,0 +1,7 @@
+# Fresh install state, past the welcome screen, on Home.
+appId: app.dhikrgeed
+---
+- launchApp:
+    clearState: true
+- tapOn: "Bilow"
+- assertVisible: "Beertaada maanta"

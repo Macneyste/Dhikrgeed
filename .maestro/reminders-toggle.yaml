@@ -1,0 +1,20 @@
+appId: app.dhikrgeed
+name: Turn a prayer reminder on and off
+---
+- runFlow: subflows/fresh-start.yaml
+- tapOn: "Salaadda"
+- tapOn: "Xusuusinta Subax"
+# First time: our own explanation, then the system permission dialog.
+- runFlow:
+    when:
+      visible: "Oggolow ogeysiisyada"
+    commands:
+      - tapOn: "Oggolow ogeysiisyada"
+      - tapOn: "Allow|ALLOW"
+- assertVisible:
+    text: "Xusuusinta Subax"
+    checked: true
+- tapOn: "Xusuusinta Subax"
+- assertVisible:
+    text: "Xusuusinta Subax"
+    checked: false

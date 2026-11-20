@@ -1,0 +1,9 @@
+# 33 counts. Callers assert the result before tapping on, so the short
+# lock after an item completes has passed.
+appId: app.dhikrgeed
+---
+- repeat:
+    times: 33
+    commands:
+      - tapOn:
+          id: "tap-area"

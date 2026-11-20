@@ -1,0 +1,6 @@
+appId: app.dhikrgeed
+---
+- tapOn: "Tasbiixda.*"
+- tapOn: "Bilow|Sii wad"
+- assertVisible:
+    id: "tap-area"

@@ -1,0 +1,14 @@
+appId: app.dhikrgeed
+name: Onboarding
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Ku soo dhawoow"
+- assertVisible: "Internet la'aan"
+- tapOn: "Bilow"
+- assertVisible: "Beertaada maanta"
+# Onboarding is shown once.
+- stopApp
+- launchApp
+- assertVisible: "Beertaada maanta"
+- assertNotVisible: "Ku soo dhawoow"

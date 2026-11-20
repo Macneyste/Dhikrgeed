@@ -1,0 +1,45 @@
+appId: app.dhikrgeed
+name: Export a backup, change data, import it back
+tags:
+  - device-only
+# The share sheet and file picker are Android system UI and their labels
+# differ between phones. Defaults match AOSP / Pixel; override with
+#   maestro test -e SAVE_TARGET="Files" -e SAVE_BUTTON="SAVE" backup-roundtrip.yaml
+env:
+  SAVE_TARGET: "Files"
+  SAVE_BUTTON: "SAVE|Save"
+---
+- runFlow: subflows/fresh-start.yaml
+- runFlow: subflows/open-tasbih.yaml
+- repeat:
+    times: 5
+    commands:
+      - tapOn:
+          id: "tap-area"
+- assertVisible: "DIKRI 1 / 3 · 5 / 100"
+- back
+- tapOn: "Dejinta"
+- scrollUntilVisible:
+    element: "Dhoofi kaydka"
+- tapOn: "Dhoofi kaydka"
+- tapOn: ${SAVE_TARGET}
+- tapOn: ${SAVE_BUTTON}
+# Change the data after the export.
+- back
+- runFlow: subflows/open-tasbih.yaml
+- tapOn: "Dib u bilow wareeggan"
+- tapOn: "Haa, dib u bilow"
+- assertVisible: "DIKRI 1 / 3 · 0 / 100"
+- back
+# Import: a summary and a confirmation come before anything changes.
+- tapOn: "Dejinta"
+- scrollUntilVisible:
+    element: "Soo celi kaydka"
+- tapOn: "Soo celi kaydka"
+- tapOn: "dhikrgeed-backup-.*\.json"
+- assertVisible: "Ku beddel xogta hadda?"
+- tapOn: "Haa, ku beddel"
+- assertVisible: "Kaydka waa la soo celiyay.*"
+- back
+- runFlow: subflows/open-tasbih.yaml
+- assertVisible: "DIKRI 1 / 3 · 5 / 100"
