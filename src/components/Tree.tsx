@@ -1,8 +1,8 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { memo, useEffect, useState, type ReactNode } from 'react';
 import { Animated, View } from 'react-native';
 import Svg, { Circle, Ellipse, G, Path } from 'react-native-svg';
 
-import { treeLayers } from '../core/progress.ts';
+import { stageLayers, treeStage, TREE_STAGES } from '../core/progress.ts';
 import { tree as T } from '../theme/theme';
 
 const AnimatedG = Animated.createAnimatedComponent(G);
@@ -139,7 +139,21 @@ export interface TreeProps {
 
 /** The dhikr tree. Grows with progress; purely motivational. */
 export function Tree({ progress, width, reducedMotion = false }: TreeProps) {
-  const layers = treeLayers(progress);
+  // Only the stage matters for drawing, so taps that stay within a stage do
+  // not re-render the SVG (important on low-end phones).
+  return <TreeArt stage={treeStage(progress).index} width={width} reducedMotion={reducedMotion} />;
+}
+
+const TreeArt = memo(function TreeArt({
+  stage,
+  width,
+  reducedMotion,
+}: {
+  stage: number;
+  width: number;
+  reducedMotion: boolean;
+}) {
+  const layers = stageLayers(TREE_STAGES[stage] ?? TREE_STAGES[0]!);
   const rm = reducedMotion;
   return (
     <View accessible accessibilityRole="image" accessibilityLabel={`Geedka: ${layers.stage.label}`}>
@@ -245,4 +259,4 @@ export function Tree({ progress, width, reducedMotion = false }: TreeProps) {
       </Svg>
     </View>
   );
-}
+});

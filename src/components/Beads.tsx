@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Defs, Line, Path, RadialGradient, Stop } from 'react-native-svg';
 
@@ -19,7 +19,7 @@ function BeadGradient({ id, phase }: { id: string; phase: Phase }) {
 }
 
 /** One bead as a standalone view (used for the drop animation). */
-export function Bead({ phase, size }: { phase: Phase; size: number }) {
+export const Bead = memo(function Bead({ phase, size }: { phase: Phase; size: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24">
       <Defs>
@@ -29,7 +29,7 @@ export function Bead({ phase, size }: { phase: Phase; size: number }) {
       <Circle cx={12} cy={12} r={10} fill={`url(#b-${phase})`} />
     </Svg>
   );
-}
+});
 
 export interface TasbihStringProps {
   width: number;
@@ -41,7 +41,7 @@ export interface TasbihStringProps {
 }
 
 /** Diagonal string with 12 beads, a gold knot and tassel at the right end. */
-export function TasbihString({ width, phase, nextPhase, remaining }: TasbihStringProps) {
+export const TasbihString = memo(function TasbihString({ width, phase, nextPhase, remaining }: TasbihStringProps) {
   const h = 74;
   const x0 = 18;
   const x1 = width - 46;
@@ -77,7 +77,7 @@ export function TasbihString({ width, phase, nextPhase, remaining }: TasbihStrin
       </Svg>
     </View>
   );
-}
+});
 
 /** End of the string in the TasbihString's own coordinates, for drop animations. */
 export function stringEnd(width: number): { x: number; y: number } {
@@ -86,9 +86,14 @@ export function stringEnd(width: number): { x: number; y: number } {
   return { x: x1 - 10, y: 14 + Math.tan((7 * Math.PI) / 180) * (x1 - x0) };
 }
 
+type Point = { x: number; y: number };
+
 interface Drop {
   key: number;
   phase: Phase;
+  /** Captured when the bead starts falling, so later taps never retarget it. */
+  from: Point;
+  to: Point;
 }
 
 /**
@@ -115,35 +120,36 @@ export function BeadDrops({
     if (seq === null || seq === last.current || reducedMotion) return;
     last.current = seq;
     // Defer so state is set from a callback, not synchronously in the effect.
-    const id = setTimeout(() => setDrops((d) => [...d.slice(-5), { key: seq, phase }]), 0);
+    const drop: Drop = { key: seq, phase, from: { ...from }, to: { ...to } };
+    const id = setTimeout(() => setDrops((d) => [...d.slice(-5), drop]), 0);
     return () => clearTimeout(id);
+    // from/to are read only when a new seq arrives.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seq, phase, reducedMotion]);
+
+  const remove = useCallback((key: number) => setDrops((all) => all.filter((x) => x.key !== key)), []);
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {drops.map((d) => (
-        <FallingBead
-          key={d.key}
-          phase={d.phase}
-          from={from}
-          to={to}
-          onDone={() => setDrops((all) => all.filter((x) => x.key !== d.key))}
-        />
+        <FallingBead key={d.key} id={d.key} phase={d.phase} from={d.from} to={d.to} onDone={remove} />
       ))}
     </View>
   );
 }
 
-function FallingBead({
+const FallingBead = memo(function FallingBead({
+  id,
   phase,
   from,
   to,
   onDone,
 }: {
+  id: number;
   phase: Phase;
-  from: { x: number; y: number };
-  to: { x: number; y: number };
-  onDone: () => void;
+  from: Point;
+  to: Point;
+  onDone: (id: number) => void;
 }) {
   const [t] = useState(() => new Animated.Value(0));
   useEffect(() => {
@@ -153,11 +159,9 @@ function FallingBead({
       easing: Easing.in(Easing.quad),
       useNativeDriver: true,
     });
-    anim.start(({ finished }) => finished && onDone());
+    anim.start(({ finished }) => finished && onDone(id));
     return () => anim.stop();
-    // onDone identity changes each render; the animation runs once per bead.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t]);
+  }, [t, id, onDone]);
   const size = 22;
   return (
     <Animated.View
@@ -175,4 +179,4 @@ function FallingBead({
       <Bead phase={phase} size={size} />
     </Animated.View>
   );
-}
+});

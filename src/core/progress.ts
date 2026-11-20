@@ -59,7 +59,11 @@ export interface TreeLayers {
 
 /** Which tree layers are visible at progress p (0..1). */
 export function treeLayers(p: number): TreeLayers {
-  const stage = treeStage(p);
+  return stageLayers(treeStage(p));
+}
+
+/** Which tree layers are visible at a stage. */
+export function stageLayers(stage: TreeStage): TreeLayers {
   const i = stage.index;
   return {
     stage,
