@@ -20,4 +20,10 @@ out=$(npm test --silent 2>&1) || {
   echo "pre-commit: npm test failed. Fix the tests before committing." >&2
   exit 1
 }
-echo "pre-commit: tests pass"
+out=$(npm run security --silent 2>&1) || {
+  printf '%s
+' "$out" >&2
+  echo "pre-commit: security check failed." >&2
+  exit 1
+}
+echo "pre-commit: tests and security check pass"
