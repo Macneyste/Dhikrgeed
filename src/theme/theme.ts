@@ -1,3 +1,4 @@
+import type { SkyPeriod } from '../core/sky.ts';
 import type { Phase } from '../core/types.ts';
 
 export const colors = {
@@ -23,6 +24,67 @@ export const colors = {
   amberText: '#835C0B',
   shadow: '#5A3424',
 } as const;
+
+/** Mixes a #RRGGBB colour toward black by `amount` (0..1). */
+export function darken(hex: string, amount: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const ch = (shift: number) =>
+    Math.round(((n >> shift) & 255) * (1 - amount))
+      .toString(16)
+      .padStart(2, '0');
+  return `#${ch(16)}${ch(8)}${ch(0)}`.toUpperCase();
+}
+
+export interface SkyTheme {
+  /** Top, middle and bottom of the sky gradient. */
+  stops: readonly [string, string, string];
+  /** Text drawn directly on the sky (≥ 4.5:1 against every stop). */
+  ink: string;
+  soft: string;
+  /** Text drawn on the grass. */
+  onGrass: string;
+  hill: string;
+  grass: readonly [string, string, string];
+  stars: boolean;
+}
+
+const dayGround = { hill: colors.hill, grass: [colors.grass1, colors.grass2, colors.grass3] as const };
+
+export const skyThemes: Record<SkyPeriod, SkyTheme> = {
+  dawn: {
+    stops: ['#FDE7D6', '#F6C9B3', '#E9A98F'],
+    ink: colors.ink,
+    soft: '#55372D',
+    onGrass: colors.grassDark,
+    stars: false,
+    ...dayGround,
+  },
+  day: {
+    stops: [colors.sky1, colors.sky2, colors.sky3],
+    ink: colors.ink,
+    soft: colors.soft,
+    onGrass: colors.grassDark,
+    stars: false,
+    ...dayGround,
+  },
+  dusk: {
+    stops: ['#FBD3B0', '#F2A57E', '#C9786A'],
+    ink: '#24120F',
+    soft: '#3A211B',
+    onGrass: colors.grassDark,
+    stars: false,
+    ...dayGround,
+  },
+  night: {
+    stops: ['#1E2340', '#2B3160', '#3D3F72'],
+    ink: '#F5F1FF',
+    soft: '#C9CBE8',
+    onGrass: '#FFFFFF',
+    stars: true,
+    hill: darken(colors.hill, 0.4),
+    grass: [darken(colors.grass1, 0.4), darken(colors.grass2, 0.4), darken(colors.grass3, 0.4)],
+  },
+};
 
 export interface PhaseColors {
   text: string;

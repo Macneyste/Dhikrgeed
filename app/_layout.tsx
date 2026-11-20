@@ -20,6 +20,7 @@ import { Scene } from '@/components/Scene';
 import { getDatabase } from '@/db/database';
 import { loadSettings, type AppSettings } from '@/db/settingsRepo';
 import { SettingsProvider } from '@/hooks/useSettings';
+import { SkyProvider } from '@/hooks/useSky';
 import { colors } from '@/theme/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -66,8 +67,10 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       {boot.state === 'ready' ? (
         <SettingsProvider initial={boot.settings}>
-          <AppEffects />
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.sky1 } }} />
+          <SkyProvider>
+            <AppEffects />
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.sky1 } }} />
+          </SkyProvider>
         </SettingsProvider>
       ) : (
         <Scene>

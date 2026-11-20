@@ -8,10 +8,12 @@ import { Chip } from '@/components/Card';
 import { grassOffset, groundHeight, Scene } from '@/components/Scene';
 import { Tree } from '@/components/Tree';
 import { useSettings } from '@/hooks/useSettings';
+import { useSkyInk } from '@/hooks/useSky';
 import { colors } from '@/theme/theme';
 
 export default function WelcomeScreen() {
   const { settings, update } = useSettings();
+  const ink = useSkyInk();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
@@ -41,7 +43,7 @@ export default function WelcomeScreen() {
         <AppText size={28} weight="extrabold" align="center" accessibilityRole="header">
           Ku soo dhawoow
         </AppText>
-        <AppText size={15} color={colors.soft} align="center">
+        <AppText size={15} color={ink.soft} align="center">
           Taabasho kasta oo dikri ah waa dhibic biyo ah. Arag geedkaaga oo kora ilaa uu miro ka bixiyo.
         </AppText>
       </View>

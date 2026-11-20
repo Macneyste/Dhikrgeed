@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { colors, radius, shadow } from '../theme/theme';
+import { InkProvider } from '../hooks/useSky';
 import { AppText } from './AppText';
 
 export function Card({
@@ -20,7 +21,13 @@ export function Card({
   accessibilityHint?: string;
 }) {
   const cardStyle = [styles.card, dashed && styles.dashed, style];
-  if (!onPress) return <View style={cardStyle}>{children}</View>;
+  // Cards are light at every time of day, so their text uses the day ink.
+  if (!onPress)
+    return (
+      <View style={cardStyle}>
+        <InkProvider>{children}</InkProvider>
+      </View>
+    );
   return (
     <Pressable
       accessibilityRole="button"
@@ -29,7 +36,7 @@ export function Card({
       onPress={onPress}
       style={({ pressed }) => [cardStyle, pressed && { opacity: 0.85 }]}
     >
-      {children}
+      <InkProvider>{children}</InkProvider>
     </Pressable>
   );
 }

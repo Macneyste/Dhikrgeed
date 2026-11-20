@@ -19,6 +19,7 @@ import { safeRouteId } from '@/core/routes';
 import { canUndo, currentIndex, totalCount, totalTarget } from '@/core/session';
 import { useSession } from '@/hooks/useSession';
 import { useSettings } from '@/hooks/useSettings';
+import { useSkyInk } from '@/hooks/useSky';
 import { useVolumeKeys } from '@/hooks/useVolumeKeys';
 import { collectionTitle } from '@/services/collections';
 import { playHaptic } from '@/services/haptics';
@@ -35,6 +36,7 @@ export default function CounterScreen() {
   const params = useLocalSearchParams<{ collectionId: string }>();
   const collectionId = safeRouteId(params.collectionId);
   const { settings } = useSettings();
+  const ink = useSkyInk();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const s = useSession(collectionId);
@@ -169,7 +171,7 @@ export default function CounterScreen() {
                   text="Allaah ha naga aqbalo annaga iyo idinkaba."
                   highlight={colors.primary}
                   size={15}
-                  color={colors.soft}
+                  color={ink.soft}
                   align="center"
                   style={styles.meaning}
                 />
@@ -202,7 +204,7 @@ export default function CounterScreen() {
                     text={item.snapshot.meaning}
                     highlight={phase.text}
                     size={14.5}
-                    color={colors.soft}
+                    color={ink.soft}
                     align="center"
                     style={styles.meaning}
                   />
@@ -252,7 +254,7 @@ export default function CounterScreen() {
           </View>
         ) : (
           <>
-            <AppText size={13} weight="bold" color={colors.grassDark} align="center" accessible={false}>
+            <AppText size={13} weight="bold" color={ink.onGrass} align="center" accessible={false}>
               Taabo meel kasta si aad u tiriso
             </AppText>
             <PhaseCards items={session.items} currentIndex={index} />

@@ -1,7 +1,8 @@
 import { StyleSheet, Text, type TextProps, type TextStyle } from 'react-native';
 
 import { useSettings } from '../hooks/useSettings';
-import { colors, fonts, scaleFont } from '../theme/theme';
+import { useInk } from '../hooks/useSky';
+import { fonts, scaleFont } from '../theme/theme';
 
 type Weight = 'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold';
 
@@ -13,8 +14,11 @@ export interface AppTextProps extends TextProps {
 }
 
 /** Latin UI text in Plus Jakarta Sans, honouring the "Qoraal weyn" setting. */
-export function AppText({ size = 15, weight = 'regular', color = colors.ink, align, style, ...rest }: AppTextProps) {
+/** Without `color`, text takes the ink of the surface it is on (sky, card…). */
+export function AppText({ size = 15, weight = 'regular', color, align, style, ...rest }: AppTextProps) {
   const { settings } = useSettings();
+  const ink = useInk();
+  color ??= ink.ink;
   const fontSize = scaleFont(size, settings.largeText);
   return (
     <Text
@@ -47,8 +51,10 @@ export interface ArabicTextProps extends TextProps {
 }
 
 /** Arabic dhikr text in Amiri, right-to-left. Plain Text only, never HTML. */
-export function ArabicText({ size, color = colors.ink, style, ...rest }: ArabicTextProps) {
+export function ArabicText({ size, color, style, ...rest }: ArabicTextProps) {
   const { settings } = useSettings();
+  const ink = useInk();
+  color ??= ink.ink;
   const fontSize = scaleFont(size, settings.largeText);
   return (
     <Text

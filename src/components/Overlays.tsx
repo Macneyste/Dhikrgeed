@@ -3,6 +3,7 @@ import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, shadow } from '../theme/theme';
+import { InkProvider } from '../hooks/useSky';
 import { AppText } from './AppText';
 import { Button } from './Button';
 import { Icon } from './Icons';
@@ -24,19 +25,21 @@ export function Sheet({
   const insets = useSafeAreaInsets();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Xir" accessibilityRole="button" />
-      <View style={[styles.sheet, { paddingBottom: 20 + insets.bottom }]} accessibilityViewIsModal>
-        <View style={styles.handle} />
-        <AppText size={20} weight="extrabold" accessibilityRole="header">
-          {title}
-        </AppText>
-        {message ? (
-          <AppText size={15} color={colors.soft} style={styles.message}>
-            {message}
+      <InkProvider>
+        <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Xir" accessibilityRole="button" />
+        <View style={[styles.sheet, { paddingBottom: 20 + insets.bottom }]} accessibilityViewIsModal>
+          <View style={styles.handle} />
+          <AppText size={20} weight="extrabold" accessibilityRole="header">
+            {title}
           </AppText>
-        ) : null}
-        <View style={styles.actions}>{children}</View>
-      </View>
+          {message ? (
+            <AppText size={15} color={colors.soft} style={styles.message}>
+              {message}
+            </AppText>
+          ) : null}
+          <View style={styles.actions}>{children}</View>
+        </View>
+      </InkProvider>
     </Modal>
   );
 }
@@ -54,20 +57,22 @@ export function Toast({
   onAction: () => void;
 }) {
   return (
-    <View style={[styles.toast, shadow]} accessibilityLiveRegion="assertive" accessibilityRole="alert">
-      <View style={styles.toastRow}>
-        <Icon name="alert" color={colors.danger} size={22} />
-        <View style={styles.toastText}>
-          <AppText size={15} weight="extrabold">
-            {title}
-          </AppText>
-          <AppText size={13} color={colors.soft}>
-            {message}
-          </AppText>
+    <InkProvider>
+      <View style={[styles.toast, shadow]} accessibilityLiveRegion="assertive" accessibilityRole="alert">
+        <View style={styles.toastRow}>
+          <Icon name="alert" color={colors.danger} size={22} />
+          <View style={styles.toastText}>
+            <AppText size={15} weight="extrabold">
+              {title}
+            </AppText>
+            <AppText size={13} color={colors.soft}>
+              {message}
+            </AppText>
+          </View>
         </View>
+        <Button label={actionLabel} onPress={onAction} variant="secondary" height={44} />
       </View>
-      <Button label={actionLabel} onPress={onAction} variant="secondary" height={44} />
-    </View>
+    </InkProvider>
   );
 }
 

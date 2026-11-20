@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar';
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,6 +27,8 @@ export function Screen({
       contentContainerStyle={[styles.content, { paddingTop: insets.top + 12 }]}
       keyboardShouldPersistTaps="handled"
     >
+      {/* These pages stay light at night, so keep dark status bar icons. */}
+      <StatusBar style="dark" />
       <View style={styles.head}>
         {left}
         <View style={styles.titles}>

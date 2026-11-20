@@ -5,6 +5,7 @@ import { CalculationMethod, Coordinates, Madhab, PrayerTimes as AdhanTimes } fro
 import type { City } from '../core/cities.ts';
 import { addDays, startOfDay } from '../core/format.ts';
 import type { PrayerTimes } from '../core/reminders.ts';
+import type { SkyTimes } from '../core/sky.ts';
 
 export function prayerTimesFor(city: City, date: Date): PrayerTimes {
   const params = CalculationMethod.MuslimWorldLeague();
@@ -17,4 +18,12 @@ export function prayerTimesFor(city: City, date: Date): PrayerTimes {
 export function prayerDays(city: City, now: Date, count = 3): PrayerTimes[] {
   const today = startOfDay(now);
   return Array.from({ length: count }, (_, i) => prayerTimesFor(city, addDays(today, i)));
+}
+
+/** Times that set the sky colour on `date` (see src/core/sky.ts). */
+export function skyTimesFor(city: City, date: Date): SkyTimes {
+  const params = CalculationMethod.MuslimWorldLeague();
+  params.madhab = Madhab.Shafi;
+  const t = new AdhanTimes(new Coordinates(city.lat, city.lng), date, params);
+  return { fajr: t.fajr, sunrise: t.sunrise, asr: t.asr, maghrib: t.maghrib };
 }

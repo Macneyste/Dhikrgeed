@@ -17,6 +17,7 @@ import { getDatabase } from '@/db/database';
 import { customIdFromCollection, customItemSpecs, deleteCustomDhikr, getCustomDhikr } from '@/db/customDhikrRepo';
 import { getActiveSession, listCompletedSessions } from '@/db/sessionRepo';
 import { useSettings } from '@/hooks/useSettings';
+import { useSkyInk } from '@/hooks/useSky';
 import { colors } from '@/theme/theme';
 
 interface Detail {
@@ -56,6 +57,7 @@ async function loadDetail(id: string): Promise<Detail | null> {
 export default function CollectionScreen() {
   const id = safeRouteId(useLocalSearchParams<{ id: string }>().id);
   const { settings } = useSettings();
+  const ink = useSkyInk();
   const [detail, setDetail] = useState<Detail | null | undefined>(undefined);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -78,7 +80,7 @@ export default function CollectionScreen() {
   if (!id || detail === null) {
     return (
       <Screen title="Lama helin" left={back}>
-        <AppText color={colors.soft}>Dikrigan lama helin.</AppText>
+        <AppText color={ink.soft}>Dikrigan lama helin.</AppText>
       </Screen>
     );
   }
@@ -103,7 +105,7 @@ export default function CollectionScreen() {
             <Tree progress={p} width={112} reducedMotion={settings.reducedMotion} />
           </View>
         </MiniScene>
-        <AppText size={14} weight="semibold" color={colors.soft}>
+        <AppText size={14} weight="semibold" color={ink.soft}>
           {detail.specs.length} dikri · {status}
         </AppText>
       </View>
