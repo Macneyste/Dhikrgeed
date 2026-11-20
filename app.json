@@ -58,7 +58,8 @@
           "color": "#2F6B3A"
         }
       ],
-      "./plugins/withNoInternetInRelease.js"
+      "./plugins/withNoInternetInRelease.js",
+      "./plugins/withVolumeKeys.js"
     ]
   }
 }
