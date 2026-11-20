@@ -4,6 +4,7 @@ import { isValidId } from './validation.ts';
 
 const NOTIFICATION_ROUTES: Record<string, string> = {
   'after-prayer': '/session/after-prayer',
+  home: '/',
 };
 
 /** Maps notification data to an in-app path, or null when it is not allowed. */

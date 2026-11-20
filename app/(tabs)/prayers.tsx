@@ -10,25 +10,40 @@ import { Sheet } from '@/components/Overlays';
 import { Screen } from '@/components/Screen';
 import { CITIES, CUSTOM_CITY_ID, isValidCoordinate, parseCustomCity } from '@/core/cities';
 import { formatTime } from '@/core/format';
-import { PRAYER_KEYS, PRAYER_NAMES, REMINDER_OFFSETS, type PrayerKey, type ReminderSettings } from '@/core/reminders';
+import {
+  PRAYER_KEYS,
+  PRAYER_NAMES,
+  REMINDER_OFFSETS,
+  type FridayReminder,
+  type PrayerKey,
+  type ReminderSettings,
+} from '@/core/reminders';
 import { sanitizeText } from '@/core/validation';
 import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { useSettings } from '@/hooks/useSettings';
 import { hasPermission, requestPermission } from '@/services/notifications';
 import { colors, fonts, shadow, TOUCH } from '@/theme/theme';
 
+type Target = PrayerKey | 'after' | Exclude<FridayReminder, 'off'>;
+
+const FRIDAY_OPTIONS: readonly [FridayReminder, string][] = [
+  ['off', 'Maya'],
+  ['thursday-evening', 'Khamiis, Maqribka kadib'],
+  ['friday-morning', 'Jimce subaxdii'],
+];
+
 export default function PrayersScreen() {
   const { settings, update } = useSettings();
   const info = usePrayerTimes();
   const [cityOpen, setCityOpen] = useState(false);
-  const [prePrompt, setPrePrompt] = useState<PrayerKey | 'after' | null>(null);
+  const [prePrompt, setPrePrompt] = useState<Target | null>(null);
   const [denied, setDenied] = useState(false);
   const r = settings.reminders;
 
   const setReminders = (patch: Partial<ReminderSettings>) => update('reminders', { ...r, ...patch }).catch(() => {});
 
   /** Turning a reminder on needs notification permission, asked only here. */
-  const enable = async (target: PrayerKey | 'after') => {
+  const enable = async (target: Target) => {
     if (await hasPermission()) {
       apply(target, true);
       return;
@@ -37,8 +52,10 @@ export default function PrayersScreen() {
     else setDenied(true);
   };
 
-  const apply = (target: PrayerKey | 'after', on: boolean) => {
+  const apply = (target: Target, on: boolean) => {
     if (target === 'after') setReminders({ afterPrayer: on });
+    else if (target === 'thursday-evening' || target === 'friday-morning')
+      setReminders({ friday: on ? target : 'off' });
     else setReminders({ prayers: { ...r.prayers, [target]: on } });
   };
 
@@ -150,6 +167,34 @@ export default function PrayersScreen() {
           thumbColor="#FFFFFF"
           accessibilityLabel="Salaadda kadib, i xusuusi adkaarta"
         />
+      </Card>
+
+      <Card style={styles.friday}>
+        <AppText size={15} weight="bold">
+          Xusuusinta Jimcaha
+        </AppText>
+        <AppText size={13} color={colors.soft}>
+          Jimce wanaagsan: Suuratul Kahf iyo salawaat.
+        </AppText>
+        <View style={styles.fridayOptions} accessibilityRole="radiogroup">
+          {FRIDAY_OPTIONS.map(([mode, label]) => {
+            const selected = r.friday === mode;
+            return (
+              <Pressable
+                key={mode}
+                onPress={() => (mode === 'off' ? setReminders({ friday: 'off' }) : enable(mode))}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                accessibilityLabel={label}
+                style={[styles.fridayOption, selected && styles.fridayOn]}
+              >
+                <AppText size={14} weight="bold" color={selected ? colors.onPrimary : colors.ink} align="center">
+                  {label}
+                </AppText>
+              </Pressable>
+            );
+          })}
+        </View>
       </Card>
 
       {denied && (
@@ -319,6 +364,18 @@ function CheckRow({ text }: { text: string }) {
 }
 
 const styles = StyleSheet.create({
+  friday: { gap: 6 },
+  fridayOptions: { gap: 8, marginTop: 6 },
+  fridayOption: {
+    minHeight: 48,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+  },
+  fridayOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   cityButton: {
     minHeight: TOUCH,
     justifyContent: 'center',

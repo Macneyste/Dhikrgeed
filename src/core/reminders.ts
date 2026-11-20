@@ -17,18 +17,24 @@ export const PRAYER_NAMES: Record<PrayerKey, { so: string; ar: string }> = {
 export type ReminderOffset = 0 | 5 | 10 | 15;
 export const REMINDER_OFFSETS: readonly ReminderOffset[] = [0, 5, 10, 15];
 
+export type FridayReminder = 'off' | 'thursday-evening' | 'friday-morning';
+export const FRIDAY_REMINDERS: readonly FridayReminder[] = ['off', 'thursday-evening', 'friday-morning'];
+
 export interface ReminderSettings {
   prayers: Record<PrayerKey, boolean>;
   /** Minutes before the prayer time. 0 = at the time. */
   offsetMinutes: ReminderOffset;
   /** Remind about after-prayer adhkar 15 minutes after each enabled prayer. */
   afterPrayer: boolean;
+  /** Optional Jumu'ah reminder; off by default. */
+  friday: FridayReminder;
 }
 
 export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
   prayers: { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false },
   offsetMinutes: 0,
   afterPrayer: false,
+  friday: 'off',
 };
 
 export const AFTER_PRAYER_DELAY_MIN = 15;
@@ -37,12 +43,12 @@ export type PrayerTimes = Record<PrayerKey, Date>;
 
 export interface PlannedReminder {
   id: string;
-  kind: 'prayer' | 'after-prayer';
+  kind: 'prayer' | 'after-prayer' | 'friday';
   prayer: PrayerKey;
   fireAt: Date;
   title: string;
   body: string;
-  data: { route: 'after-prayer' };
+  data: { route: 'after-prayer' | 'home' };
 }
 
 export function enabledCount(settings: ReminderSettings): number {
@@ -55,6 +61,7 @@ export function parseReminderSettings(json: string | null | undefined): Reminder
     prayers: { ...DEFAULT_REMINDER_SETTINGS.prayers },
     offsetMinutes: 0,
     afterPrayer: false,
+    friday: 'off',
   };
   if (!json) return base;
   try {
@@ -65,6 +72,7 @@ export function parseReminderSettings(json: string | null | undefined): Reminder
       base.offsetMinutes = raw.offsetMinutes as ReminderOffset;
     }
     base.afterPrayer = raw.afterPrayer === true;
+    if (FRIDAY_REMINDERS.includes(raw.friday as FridayReminder)) base.friday = raw.friday as FridayReminder;
   } catch {
     // Keep defaults.
   }
@@ -117,6 +125,41 @@ export function planReminders(input: PlanInput): PlannedReminder[] {
   return plans
     .filter((p) => p.fireAt.getTime() > now.getTime())
     .sort((a, b) => a.fireAt.getTime() - b.fireAt.getTime());
+}
+
+export const FRIDAY_AFTER_MAGHRIB_MIN = 15;
+/** Friday morning reminder time, local. */
+export const FRIDAY_MORNING_HOUR = 8;
+
+/**
+ * The next Friday reminder within `days` (pass a week), or none when off.
+ * Thursday: 15 minutes after Maghrib. Friday: 08:00.
+ */
+export function planFridayReminder(days: readonly PrayerTimes[], mode: FridayReminder, now: Date): PlannedReminder[] {
+  if (mode === 'off') return [];
+  for (const times of days) {
+    const day = times.maghrib;
+    let fireAt: Date | null = null;
+    if (mode === 'thursday-evening' && day.getDay() === 4) {
+      fireAt = new Date(day.getTime() + FRIDAY_AFTER_MAGHRIB_MIN * 60000);
+    } else if (mode === 'friday-morning' && day.getDay() === 5) {
+      fireAt = new Date(day.getFullYear(), day.getMonth(), day.getDate(), FRIDAY_MORNING_HOUR, 0);
+    }
+    if (fireAt && fireAt.getTime() > now.getTime()) {
+      return [
+        {
+          id: `friday:${fireAt.toISOString()}`,
+          kind: 'friday',
+          prayer: 'maghrib',
+          fireAt,
+          title: 'Jimce wanaagsan',
+          body: 'Suuratul Kahf iyo salawaat.',
+          data: { route: 'home' },
+        },
+      ];
+    }
+  }
+  return [];
 }
 
 /** The next prayer after `now` across the given days, or null. */

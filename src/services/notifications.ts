@@ -5,7 +5,7 @@ import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { resolveCity } from '../core/cities.ts';
-import { planReminders, PRAYER_KEYS } from '../core/reminders.ts';
+import { planFridayReminder, planReminders, PRAYER_KEYS } from '../core/reminders.ts';
 import type { AppSettings } from '../db/settingsRepo';
 import { prayerDays } from './prayerTimes';
 
@@ -43,21 +43,20 @@ export async function requestPermission(): Promise<boolean> {
   return status.granted;
 }
 
-/** Cancels everything and schedules reminders for today and the next 2 days. */
+/** Cancels everything and schedules prayer reminders for 3 days and the next Friday reminder. */
 export async function rescheduleReminders(settings: AppSettings): Promise<number> {
   await configureNotifications();
   await Notifications.cancelAllScheduledNotificationsAsync();
-  const anyEnabled = PRAYER_KEYS.some((k) => settings.reminders.prayers[k]);
+  const anyEnabled = PRAYER_KEYS.some((k) => settings.reminders.prayers[k]) || settings.reminders.friday !== 'off';
   if (!anyEnabled || !(await hasPermission())) return 0;
 
   const city = resolveCity(settings.city, settings.customCity);
   const now = new Date();
-  const plans = planReminders({
-    days: prayerDays(city, now, 3),
-    settings: settings.reminders,
-    cityName: city.name,
-    now,
-  });
+  const week = prayerDays(city, now, 8);
+  const plans = [
+    ...planReminders({ days: week.slice(0, 3), settings: settings.reminders, cityName: city.name, now }),
+    ...planFridayReminder(week, settings.reminders.friday, now),
+  ];
   for (const plan of plans) {
     await Notifications.scheduleNotificationAsync({
       identifier: plan.id,
