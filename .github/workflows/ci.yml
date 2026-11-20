@@ -18,6 +18,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Content packs (generated file up to date, structure, ids)
+        run: npm run validate:content
       - run: npm run check
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
