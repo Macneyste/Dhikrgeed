@@ -8,7 +8,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const ROOT = process.cwd();
-const CODE_DIRS = ['src', 'app'];
+const CODE_DIRS = ['src', 'app', 'modules'];
 const CODE_EXT = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
 
 const FORBIDDEN: Array<[RegExp, string]> = [
