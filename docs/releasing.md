@@ -35,3 +35,15 @@ That is a product decision for the maintainers. Until it is made, JS fixes ship 
 4. Tag: `git tag vX.Y.Z && git push --tags`.
 5. Google Play: upload the `production` AAB, staged rollout 10% → 50% → 100%.
 6. GitHub Releases: attach the `preview` APK and its SHA-256 (`sha256sum dhikrgeed-X.Y.Z.apk`) in the notes.
+
+## F-Droid
+
+Store text is in `fastlane/metadata/android/so/` and `en-US/` (screenshots still to add in `images/phoneScreenshots/`; the `changelogs/<versionCode>.txt` file must match `android.versionCode`).
+
+**Blocker:** `expo-notifications` always links `com.google.firebase:firebase-messaging`, even though Dhikrgeed only uses local notifications. F-Droid does not accept that proprietary dependency. An F-Droid build needs a flavour that excludes it, for example a config plugin that adds to `android/app/build.gradle`:
+
+```gradle
+configurations.all { exclude group: 'com.google.firebase', module: 'firebase-messaging' }
+```
+
+and a check that local notifications still schedule and fire without it. Until that is done and tested, publish on Google Play and GitHub Releases only. No other native module pulls in Google libraries (checked for Phase 2).

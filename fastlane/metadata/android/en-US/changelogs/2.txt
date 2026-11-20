@@ -1,0 +1,1 @@
+Volume-key counting, new haptics, backup, time-of-day sky, garden, Hijri date, Qibla and Ramadan mode.

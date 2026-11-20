@@ -1,0 +1,11 @@
+Dhikrgeed is a tasbih and adhkar counter in Somali.
+
+• Tap anywhere to count; a tree grows as you count.
+• Tasbih (33 · 33 · 34), after-prayer, morning and evening adhkar, and your own dhikr.
+• Count with the volume buttons, distinct haptics, screen stays on while counting.
+• Prayer times with reminders you choose, Hijri date, Qibla and Ramadan mode.
+• My garden: every completed round becomes a small tree.
+• Export and restore your own backup.
+
+No internet, no account, no ads, no tracking. Your data stays on your phone.
+Open source (MIT).
