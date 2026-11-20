@@ -30,3 +30,13 @@ Content must never be written from memory.
 6. Ids are permanent. Never rename or reuse a dhikr or collection id.
 
 `npm run validate:content -- --release` must pass before a public release.
+
+## Fonts
+
+The Arabic font is a subset of Amiri Bold, to keep the APK small. After updating `@expo-google-fonts/amiri`, or if new bundled text uses characters outside the subset, regenerate it:
+
+```bash
+npm run fonts:subset   # writes assets/fonts/Amiri-Bold-subset.ttf
+```
+
+The kept Unicode ranges are in `scripts/font-ranges.mjs`. `npm test` fails if bundled adhkar use a character outside them; add the range there and run the command again. Commit the regenerated font.

@@ -5,7 +5,7 @@ Dhikrgeed's own code is MIT licensed. It bundles or depends on the following.
 ## Fonts (SIL Open Font License 1.1)
 
 - **Plus Jakarta Sans**: Copyright 2020 The Plus Jakarta Sans Project Authors. Bundled via `@expo-google-fonts/plus-jakarta-sans`.
-- **Amiri**: Copyright 2010-2022 The Amiri Project Authors. Bundled via `@expo-google-fonts/amiri`.
+- **Amiri**: Copyright 2010-2022 The Amiri Project Authors. SIL Open Font License 1.1. Bundled as a subset (`assets/fonts/Amiri-Bold-subset.ttf`, made with `npm run fonts:subset` from `@expo-google-fonts/amiri`); licence in `assets/fonts/OFL-Amiri.txt`.
 
 Full OFL text: <https://openfontlicense.org/open-font-license-official-text/>
 

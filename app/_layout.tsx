@@ -1,4 +1,3 @@
-import { Amiri_700Bold } from '@expo-google-fonts/amiri';
 import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
@@ -34,7 +33,8 @@ export default function RootLayout() {
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold,
     PlusJakartaSans_800ExtraBold,
-    Amiri_700Bold,
+    // Subset of Amiri Bold (scripts/subset-fonts.mjs); same family name as before.
+    Amiri_700Bold: require('../assets/fonts/Amiri-Bold-subset.ttf'),
   });
   const [boot, setBoot] = useState<Boot>({ state: 'loading' });
   const [attempt, setAttempt] = useState(0);
