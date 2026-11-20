@@ -4,14 +4,16 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
-import { IconButton } from '@/components/Button';
+import { Button, IconButton } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Icon } from '@/components/Icons';
+import { Sheet } from '@/components/Overlays';
 import { Screen } from '@/components/Screen';
 import { enabledCount } from '@/core/reminders';
 import type { AppSettings } from '@/db/settingsRepo';
 import { useSettings } from '@/hooks/useSettings';
-import { exportBackup } from '@/services/backup';
+import { backupSummary, type Backup } from '@/core/backup';
+import { exportBackup, pickBackup, restoreBackup } from '@/services/backup';
 import { colors } from '@/theme/theme';
 
 type BoolKey = 'largeText' | 'haptics' | 'volumeKeys' | 'transliteration' | 'meaning' | 'reducedMotion';
@@ -34,10 +36,12 @@ const READING: { key: BoolKey; title: string; description: string }[] = [
 ];
 
 export default function SettingsScreen() {
-  const { settings, update } = useSettings();
+  const { settings, update, reload } = useSettings();
   const version = Constants.expoConfig?.version ?? '';
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+
+  const [pending, setPending] = useState<Backup | null>(null);
 
   const onExport = () => {
     if (busy) return;
@@ -45,6 +49,32 @@ export default function SettingsScreen() {
     setNotice(null);
     exportBackup(settings, version)
       .catch(() => setNotice('Kaydka lama dhoofin karin. Mar kale isku day.'))
+      .finally(() => setBusy(false));
+  };
+
+  // Import: pick and validate first; nothing changes until the person confirms.
+  const onImport = () => {
+    if (busy) return;
+    setBusy(true);
+    setNotice(null);
+    pickBackup()
+      .then((r) => {
+        if (r.kind === 'ok') setPending(r.backup);
+        else if (r.kind === 'error') setNotice(r.error);
+      })
+      .catch(() => setNotice('Faylka lama akhrin karin. Mar kale isku day.'))
+      .finally(() => setBusy(false));
+  };
+
+  const onConfirmImport = () => {
+    const backup = pending;
+    setPending(null);
+    if (!backup) return;
+    setBusy(true);
+    restoreBackup(backup)
+      .then(reload)
+      .then(() => setNotice(`Kaydka waa la soo celiyay: ${backupSummary(backup)}.`))
+      .catch(() => setNotice('Kaydka lama soo celin karin. Xogtaadii hore waxba iskama beddelin.'))
       .finally(() => setBusy(false));
   };
 
@@ -84,6 +114,12 @@ export default function SettingsScreen() {
           value="Fayl JSON ah oo aad adigu kaydsato ama u dirto telefoon kale."
           onPress={onExport}
         />
+        <LinkRow
+          title="Soo celi kaydka"
+          value="Ka soo celi fayl kayd ah. Waad xaqiijin doontaa ka hor inta aan waxba la beddelin."
+          onPress={onImport}
+          divider
+        />
       </Card>
       {notice ? (
         <AppText size={13} color={colors.soft} align="center" accessibilityLiveRegion="polite">
@@ -105,6 +141,20 @@ export default function SettingsScreen() {
       <AppText size={13} color={colors.soft} align="center" style={styles.footer}>
         Xogtaadu waxay ku kaydsan tahay telefoonkaaga oo keliya. Akoon, xayeysiis iyo tracking midna ma jiro.
       </AppText>
+
+      <Sheet
+        visible={pending !== null}
+        onClose={() => setPending(null)}
+        title="Ku beddel xogta hadda?"
+        message={
+          pending
+            ? `Kaydkan wuxuu leeyahay ${backupSummary(pending)}. Wareegyadaada, dikriyadaada gaarka ah iyo dejintaada hadda waa la beddelayaa.`
+            : undefined
+        }
+      >
+        <Button label="Maya" variant="secondary" onPress={() => setPending(null)} />
+        <Button label="Haa, ku beddel" variant="danger" onPress={onConfirmImport} />
+      </Sheet>
     </Screen>
   );
 }
