@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dhikrgeed",
     "slug": "dhikrgeed",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "dhikrgeed",
@@ -13,7 +13,7 @@
     ],
     "android": {
       "package": "app.dhikrgeed",
-      "versionCode": 1,
+      "versionCode": 2,
       "allowBackup": false,
       "predictiveBackGestureEnabled": false,
       "permissions": [
