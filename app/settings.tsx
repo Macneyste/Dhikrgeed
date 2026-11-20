@@ -16,6 +16,8 @@ import { useSettings } from '@/hooks/useSettings';
 import { HIJRI_MONTHS_SO, WEEKDAYS_SO } from '@/i18n/hijri';
 import { backupSummary, type Backup } from '@/core/backup';
 import { exportBackup, pickBackup, restoreBackup } from '@/services/backup';
+import { openBugReport } from '@/services/bugReport';
+import { logEvent } from '@/services/log';
 import { colors } from '@/theme/theme';
 
 type BoolKey = 'largeText' | 'haptics' | 'volumeKeys' | 'transliteration' | 'meaning' | 'reducedMotion' | 'ramadan';
@@ -55,7 +57,10 @@ export default function SettingsScreen() {
     setBusy(true);
     setNotice(null);
     exportBackup(settings, version)
-      .catch(() => setNotice('Kaydka lama dhoofin karin. Mar kale isku day.'))
+      .catch(() => {
+        logEvent('warn', 'backup.export:failed');
+        setNotice('Kaydka lama dhoofin karin. Mar kale isku day.');
+      })
       .finally(() => setBusy(false));
   };
 
@@ -67,7 +72,10 @@ export default function SettingsScreen() {
     pickBackup()
       .then((r) => {
         if (r.kind === 'ok') setPending(r.backup);
-        else if (r.kind === 'error') setNotice(r.error);
+        else if (r.kind === 'error') {
+          logEvent('info', 'backup.import:refused');
+          setNotice(r.error);
+        }
       })
       .catch(() => setNotice('Faylka lama akhrin karin. Mar kale isku day.'))
       .finally(() => setBusy(false));
@@ -81,7 +89,10 @@ export default function SettingsScreen() {
     restoreBackup(backup)
       .then(reload)
       .then(() => setNotice(`Kaydka waa la soo celiyay: ${backupSummary(backup)}.`))
-      .catch(() => setNotice('Kaydka lama soo celin karin. Xogtaadii hore waxba iskama beddelin.'))
+      .catch(() => {
+        logEvent('warn', 'backup.restore:failed');
+        setNotice('Kaydka lama soo celin karin. Xogtaadii hore waxba iskama beddelin.');
+      })
       .finally(() => setBusy(false));
   };
 
@@ -172,6 +183,12 @@ export default function SettingsScreen() {
           onPress={() => router.push('/prayers')}
         />
         <LinkRow title="Taariikhda wareegyada" onPress={() => router.push('/history')} divider />
+        <LinkRow
+          title="Soo sheeg cilad"
+          value="Email aad adigu akhrinayso ka hor intaadan dirin. Wax qoraal ah oo aad qortay kuma jiraan."
+          onPress={() => openBugReport().catch(() => setNotice('Email lama furi karin.'))}
+          divider
+        />
         <LinkRow title="Ku saabsan app-ka" value={`Open source · MIT${version ? ` · ${version}` : ''}`} divider />
       </Card>
 

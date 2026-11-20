@@ -21,6 +21,7 @@ import { getDatabase } from '@/db/database';
 import { loadSettings, type AppSettings } from '@/db/settingsRepo';
 import { SettingsProvider } from '@/hooks/useSettings';
 import { SkyProvider } from '@/hooks/useSky';
+import { logEvent } from '@/services/log';
 import { colors } from '@/theme/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -47,7 +48,9 @@ export default function RootLayout() {
       .then((settings) => alive && setBoot({ state: 'ready', settings }))
       .catch((error: unknown) => {
         // Never log user text; the error name is enough to diagnose.
-        console.warn('Database open failed:', error instanceof Error ? error.name : 'unknown');
+        const name = error instanceof Error ? error.name : 'unknown';
+        console.warn('Database open failed:', name);
+        logEvent('error', `db.open:${name}`);
         if (alive) setBoot({ state: 'error' });
       });
     return () => {

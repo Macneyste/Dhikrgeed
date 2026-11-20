@@ -70,10 +70,14 @@
             "enableShrinkResourcesInReleaseBuilds": true
           }
         }
-      ]
+      ],
+      "expo-mail-composer"
     ],
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "extra": {
+      "supportEmail": ""
     }
   }
 }

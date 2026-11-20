@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createTapGate, tap as coreTap } from '../core/session.ts';
 import type { Session } from '../core/types.ts';
+import { logEvent } from '../services/log';
 import { openSession, resetSession, tapSession, undoSession, type MutationResult } from '../services/sessionService';
 
 export interface TapEvent {
@@ -77,6 +78,7 @@ export function useSession(collectionId: string | null): UseSession {
   }, [collectionId, reloadKey, apply]);
 
   const onFailure = useCallback(() => {
+    logEvent('warn', 'session.save:failed');
     if (!mounted.current) return;
     // Roll the prediction back to what is really saved.
     predicted.current = confirmed.current;
