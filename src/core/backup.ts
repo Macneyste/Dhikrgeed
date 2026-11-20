@@ -5,6 +5,7 @@
 // counts and targets, and rejects the whole file on any invalid record so an
 // import either restores everything or changes nothing. Errors are Somali.
 
+import { HIJRI_ADJUSTMENTS, type HijriAdjustment } from './hijri.ts';
 import { CITIES, CUSTOM_CITY_ID, parseCustomCity, type CustomCity } from './cities.ts';
 import { parseReminderSettings, type ReminderSettings } from './reminders.ts';
 import { PHASES, type DhikrSnapshot, type Phase, type Session, type SessionItem } from './types.ts';
@@ -31,6 +32,8 @@ export interface BackupSettings {
   transliteration: boolean;
   meaning: boolean;
   reducedMotion: boolean;
+  ramadan: boolean;
+  hijriAdjust: HijriAdjustment;
   city: string;
   customCity: CustomCity | null;
   reminders: ReminderSettings;
@@ -43,6 +46,7 @@ export const BACKUP_BOOL_SETTINGS = [
   'transliteration',
   'meaning',
   'reducedMotion',
+  'ramadan',
 ] as const;
 
 export interface BackupCustomDhikr {
@@ -88,6 +92,8 @@ export function createBackup(input: BackupInput): Backup {
       transliteration: settings.transliteration,
       meaning: settings.meaning,
       reducedMotion: settings.reducedMotion,
+      ramadan: settings.ramadan,
+      hijriAdjust: settings.hijriAdjust,
       city: settings.city,
       customCity: settings.customCity,
       reminders: settings.reminders,
@@ -175,6 +181,8 @@ function parseSettings(value: unknown): Partial<BackupSettings> {
   for (const key of BACKUP_BOOL_SETTINGS) {
     if (typeof raw[key] === 'boolean') out[key] = raw[key] as boolean;
   }
+  if (HIJRI_ADJUSTMENTS.includes(raw.hijriAdjust as HijriAdjustment))
+    out.hijriAdjust = raw.hijriAdjust as HijriAdjustment;
   if (typeof raw.city === 'string' && (raw.city === CUSTOM_CITY_ID || CITIES.some((c) => c.id === raw.city))) {
     out.city = raw.city;
   }

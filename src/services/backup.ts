@@ -97,6 +97,7 @@ export async function restoreBackup(backup: Backup): Promise<void> {
         await saveSetting(txn, 'customCity', st.customCity ? JSON.stringify(st.customCity) : null);
       }
       if (st.city !== undefined) await saveSetting(txn, 'city', st.city);
+      if (st.hijriAdjust !== undefined) await saveSetting(txn, 'hijriAdjust', st.hijriAdjust);
       if (st.reminders !== undefined) await saveSetting(txn, 'reminders', st.reminders);
     }),
   );

@@ -46,6 +46,8 @@ function sampleInput(): BackupInput {
       transliteration: true,
       meaning: false,
       reducedMotion: true,
+      ramadan: true,
+      hijriAdjust: -1,
       city: 'custom',
       customCity: { lat: 2.04, lng: 45.34, name: 'Guriga' },
       reminders: { ...DEFAULT_REMINDER_SETTINGS, prayers: { ...DEFAULT_REMINDER_SETTINGS.prayers, fajr: true } },
@@ -201,12 +203,14 @@ test('invalid settings are ignored or refused, never stored blindly', () => {
   b.settings.city = 'atlantis';
   b.settings.reminders = { prayers: { fajr: 'on' }, offsetMinutes: 99 };
   b.settings.onboarded = false;
+  b.settings.hijriAdjust = 7;
   const r = parseBackup(json(b));
   assert.ok(r.ok);
   if (!r.ok) return;
   assert.equal('largeText' in r.backup.settings, false);
   assert.equal('city' in r.backup.settings, false);
   assert.equal('onboarded' in r.backup.settings, false);
+  assert.equal('hijriAdjust' in r.backup.settings, false);
   assert.equal(r.backup.settings.reminders?.prayers.fajr, false);
   assert.equal(r.backup.settings.reminders?.offsetMinutes, 0);
 
