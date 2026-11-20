@@ -15,7 +15,9 @@ if [ -n "$blocked" ]; then
   exit 1
 fi
 
-npm test --silent || {
+out=$(npm test --silent 2>&1) || {
+  printf '%s\n' "$out" >&2
   echo "pre-commit: npm test failed. Fix the tests before committing." >&2
   exit 1
 }
+echo "pre-commit: tests pass"
