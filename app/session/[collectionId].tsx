@@ -1,4 +1,3 @@
-import * as Haptics from 'expo-haptics';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -19,6 +18,7 @@ import { canUndo, currentIndex, totalCount, totalTarget } from '@/core/session';
 import { useSession } from '@/hooks/useSession';
 import { useSettings } from '@/hooks/useSettings';
 import { collectionTitle } from '@/services/collections';
+import { playHaptic } from '@/services/haptics';
 import { colors, phaseColors } from '@/theme/theme';
 
 const STRING_H = 104;
@@ -37,17 +37,16 @@ export default function CounterScreen() {
   const s = useSession(collectionId);
   const [confirmReset, setConfirmReset] = useState(false);
 
-  // Haptics follow saved taps only.
+  // Haptics follow saved changes only.
   const lastTap = s.lastTap;
   useEffect(() => {
-    if (!lastTap || !settings.haptics) return;
-    const run = lastTap.roundCompleted
-      ? Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      : lastTap.itemCompleted
-        ? Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-        : Haptics.selectionAsync();
-    run.catch(() => {});
+    if (!lastTap) return;
+    playHaptic(lastTap.roundCompleted ? 'round' : lastTap.itemCompleted ? 'item' : 'count', settings.haptics);
   }, [lastTap, settings.haptics]);
+  const undoSeq = s.undoSeq;
+  useEffect(() => {
+    if (undoSeq > 0) playHaptic('undo', settings.haptics);
+  }, [undoSeq, settings.haptics]);
 
   // Layout: tree soil sits on the first grass layer.
   const groundTop = height - groundHeight(width);

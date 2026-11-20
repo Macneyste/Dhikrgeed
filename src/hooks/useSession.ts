@@ -18,6 +18,8 @@ export interface UseSession {
   /** Count shown in the save-failed toast, or null when hidden. */
   saveFailedAt: number | null;
   lastTap: TapEvent | null;
+  /** Increments on every saved undo that changed a count. */
+  undoSeq: number;
   tap(): void;
   undo(): void;
   reset(): void;
@@ -36,6 +38,7 @@ export function useSession(collectionId: string | null): UseSession {
   const [loadError, setLoadError] = useState(false);
   const [saveFailedAt, setSaveFailedAt] = useState<number | null>(null);
   const [lastTap, setLastTap] = useState<TapEvent | null>(null);
+  const [undoSeq, setUndoSeq] = useState(0);
 
   // Saved state, plus a synchronous prediction that includes queued taps so
   // the transition lock engages at tap time.
@@ -110,7 +113,7 @@ export function useSession(collectionId: string | null): UseSession {
   }, [apply, onFailure]);
 
   const run = useCallback(
-    (op: (id: string) => Promise<MutationResult>) => {
+    (op: (id: string) => Promise<MutationResult>, onChanged?: () => void) => {
       const s = predicted.current;
       if (!s) return;
       op(s.id)
@@ -118,13 +121,14 @@ export function useSession(collectionId: string | null): UseSession {
           if (!mounted.current) return;
           predicted.current = r.session;
           apply(r.session);
+          if (r.changed) onChanged?.();
         })
         .catch(onFailure);
     },
     [apply, onFailure],
   );
 
-  const undo = useCallback(() => run(undoSession), [run]);
+  const undo = useCallback(() => run(undoSession, () => setUndoSeq((n) => n + 1)), [run]);
   const reset = useCallback(() => run(resetSession), [run]);
 
   const newRound = useCallback(() => {
@@ -145,6 +149,7 @@ export function useSession(collectionId: string | null): UseSession {
     loadError,
     saveFailedAt,
     lastTap,
+    undoSeq,
     tap,
     undo,
     reset,

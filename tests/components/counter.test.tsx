@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import CounterScreen from '../../app/session/[collectionId]';
+import * as Haptics from 'expo-haptics';
+
 import { resetFakeStore } from './fakeSessionService';
 
 // SQLite is replaced by an in-memory fake that uses the real core rules.
@@ -18,7 +20,7 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(async () => {}),
   impactAsync: jest.fn(async () => {}),
   notificationAsync: jest.fn(async () => {}),
-  ImpactFeedbackStyle: { Medium: 'medium' },
+  ImpactFeedbackStyle: { Medium: 'medium', Light: 'light' },
   NotificationFeedbackType: { Success: 'success' },
 }));
 
@@ -27,6 +29,7 @@ jest.mock('expo-haptics', () => ({
 let clock = 1_000_000;
 
 beforeEach(() => {
+  jest.clearAllMocks();
   resetFakeStore();
   mockCollectionId = 'tasbih';
   jest.spyOn(Date, 'now').mockImplementation(() => clock);
@@ -94,5 +97,13 @@ describe('counter screen', () => {
 
     await fireEvent.press(screen.getByLabelText('Wareeg cusub'));
     expect(screen.getByText('DIKRI 1 / 1 · 0 / 2')).toBeTruthy();
+  });
+
+  it('plays a selection haptic per count and a light impact on undo', async () => {
+    await renderCounter();
+    await tapTimes(2, 10);
+    expect(Haptics.selectionAsync).toHaveBeenCalledTimes(2);
+    await fireEvent.press(screen.getByLabelText('Ka noqo tirintii ugu dambaysay'));
+    expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Light);
   });
 });
