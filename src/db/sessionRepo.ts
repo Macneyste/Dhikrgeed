@@ -161,3 +161,9 @@ export async function saveSession(db: SQLiteDatabase, session: Session): Promise
 export async function deleteSessionsForCollection(db: SQLiteDatabase, collectionId: string): Promise<void> {
   await db.runAsync("DELETE FROM sessions WHERE collection_id = ? AND status = 'active'", [collectionId]);
 }
+
+/** Every round, oldest first (used for backups). */
+export async function listAllSessions(db: SQLiteDatabase): Promise<Session[]> {
+  const rows = await db.getAllAsync<SessionRow>('SELECT * FROM sessions ORDER BY started_at ASC');
+  return hydrate(db, rows);
+}

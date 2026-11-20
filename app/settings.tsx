@@ -1,5 +1,6 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
@@ -10,6 +11,7 @@ import { Screen } from '@/components/Screen';
 import { enabledCount } from '@/core/reminders';
 import type { AppSettings } from '@/db/settingsRepo';
 import { useSettings } from '@/hooks/useSettings';
+import { exportBackup } from '@/services/backup';
 import { colors } from '@/theme/theme';
 
 type BoolKey = 'largeText' | 'haptics' | 'volumeKeys' | 'transliteration' | 'meaning' | 'reducedMotion';
@@ -34,6 +36,17 @@ const READING: { key: BoolKey; title: string; description: string }[] = [
 export default function SettingsScreen() {
   const { settings, update } = useSettings();
   const version = Constants.expoConfig?.version ?? '';
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const onExport = () => {
+    if (busy) return;
+    setBusy(true);
+    setNotice(null);
+    exportBackup(settings, version)
+      .catch(() => setNotice('Kaydka lama dhoofin karin. Mar kale isku day.'))
+      .finally(() => setBusy(false));
+  };
 
   return (
     <Screen
@@ -63,6 +76,20 @@ export default function SettingsScreen() {
           </View>
         ))}
       </Card>
+
+      <SectionLabel>KAYDKA</SectionLabel>
+      <Card style={styles.list}>
+        <LinkRow
+          title="Dhoofi kaydka"
+          value="Fayl JSON ah oo aad adigu kaydsato ama u dirto telefoon kale."
+          onPress={onExport}
+        />
+      </Card>
+      {notice ? (
+        <AppText size={13} color={colors.soft} align="center" accessibilityLiveRegion="polite">
+          {notice}
+        </AppText>
+      ) : null}
 
       <SectionLabel>KALE</SectionLabel>
       <Card style={styles.list}>

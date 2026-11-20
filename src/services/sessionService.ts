@@ -123,3 +123,8 @@ export function resetSession(sessionId: string): Promise<MutationResult> {
     roundCompleted: false,
   }));
 }
+
+/** Runs `job` on the session write queue so no tap or undo interleaves with it. */
+export function withSessionLock<T>(job: () => Promise<T>): Promise<T> {
+  return queue.run(job);
+}
