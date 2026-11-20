@@ -9,12 +9,14 @@ import { MiniScene } from '@/components/Scene';
 import { SectionTitle, Screen } from '@/components/Screen';
 import { Tree } from '@/components/Tree';
 import { formatTime } from '@/core/format';
+import { formatHijri } from '@/core/hijri';
 import { progress } from '@/core/progress';
 import { currentIndex, totalCount, totalTarget } from '@/core/session';
 import type { Session } from '@/core/types';
 import { continueSession, statusFor, useOverview } from '@/hooks/useOverview';
 import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { useSettings } from '@/hooks/useSettings';
+import { HIJRI_MONTHS_SO, WEEKDAYS_SO } from '@/i18n/hijri';
 import { collectionTitle } from '@/services/collections';
 import { colors } from '@/theme/theme';
 
@@ -32,7 +34,7 @@ export default function HomeScreen() {
 
   return (
     <Screen
-      eyebrow="Assalaamu calaykum"
+      eyebrow={formatHijri(new Date(), settings.hijriAdjust, HIJRI_MONTHS_SO, WEEKDAYS_SO)}
       title="Beertaada maanta"
       right={
         <IconButton

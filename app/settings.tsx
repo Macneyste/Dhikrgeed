@@ -9,9 +9,11 @@ import { Card } from '@/components/Card';
 import { Icon } from '@/components/Icons';
 import { Sheet } from '@/components/Overlays';
 import { Screen } from '@/components/Screen';
+import { formatHijri, HIJRI_ADJUSTMENTS } from '@/core/hijri';
 import { enabledCount } from '@/core/reminders';
 import type { AppSettings } from '@/db/settingsRepo';
 import { useSettings } from '@/hooks/useSettings';
+import { HIJRI_MONTHS_SO, WEEKDAYS_SO } from '@/i18n/hijri';
 import { backupSummary, type Backup } from '@/core/backup';
 import { exportBackup, pickBackup, restoreBackup } from '@/services/backup';
 import { colors } from '@/theme/theme';
@@ -105,6 +107,36 @@ export default function SettingsScreen() {
             />
           </View>
         ))}
+      </Card>
+
+      <SectionLabel>TAARIIKHDA HIJRIGA</SectionLabel>
+      <Card style={styles.hijri}>
+        <AppText size={15.5} weight="bold">
+          {formatHijri(new Date(), settings.hijriAdjust, HIJRI_MONTHS_SO, WEEKDAYS_SO)}
+        </AppText>
+        <AppText size={13} color={colors.soft}>
+          Haddii bisha laga arkay maalin ka hor ama ka dib meeshaada, halkan ku hagaaji.
+        </AppText>
+        <View style={styles.adjustRow} accessibilityRole="radiogroup">
+          {HIJRI_ADJUSTMENTS.map((n) => {
+            const selected = settings.hijriAdjust === n;
+            const label = n === 0 ? '0' : n > 0 ? `+${n}` : String(n);
+            return (
+              <Pressable
+                key={n}
+                onPress={() => update('hijriAdjust', n).catch(() => {})}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                accessibilityLabel={n === 0 ? "Hagaajin la'aan" : `${label} maalmood`}
+                style={[styles.adjust, selected && styles.adjustOn]}
+              >
+                <AppText size={15} weight="bold" color={selected ? colors.onPrimary : colors.ink}>
+                  {label}
+                </AppText>
+              </Pressable>
+            );
+          })}
+        </View>
       </Card>
 
       <SectionLabel>KAYDKA</SectionLabel>
@@ -210,6 +242,18 @@ const styles = StyleSheet.create({
   section: { letterSpacing: 1.3, marginTop: 6 },
   list: { paddingVertical: 4 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 64, paddingVertical: 8 },
+  hijri: { gap: 6 },
+  adjustRow: { flexDirection: 'row', gap: 8, marginTop: 6 },
+  adjust: {
+    flex: 1,
+    minHeight: 48,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  adjustOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   divider: { borderTopWidth: 1, borderTopColor: colors.lineSoft },
   text: { flex: 1, gap: 2 },
   footer: { marginTop: 8, paddingHorizontal: 12 },

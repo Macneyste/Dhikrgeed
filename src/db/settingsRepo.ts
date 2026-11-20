@@ -1,5 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { HIJRI_ADJUSTMENTS, type HijriAdjustment } from '../core/hijri.ts';
 import { DEFAULT_REMINDER_SETTINGS, parseReminderSettings, type ReminderSettings } from '../core/reminders.ts';
 
 export interface AppSettings {
@@ -17,6 +18,8 @@ export interface AppSettings {
   customCity: string | null;
   reminders: ReminderSettings;
   notificationsAsked: boolean;
+  /** Days added to the Umm al-Qura date for local moon sighting. */
+  hijriAdjust: HijriAdjustment;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -31,6 +34,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   customCity: null,
   reminders: DEFAULT_REMINDER_SETTINGS,
   notificationsAsked: false,
+  hijriAdjust: 0,
 };
 
 const BOOL_KEYS = [
@@ -55,6 +59,8 @@ export async function loadSettings(db: SQLiteDatabase): Promise<AppSettings> {
   const city = map.get('city');
   if (city && /^[a-z0-9-]{1,32}$/.test(city)) out.city = city;
   out.customCity = map.get('customCity') ?? null;
+  const adjust = Number(map.get('hijriAdjust'));
+  if (HIJRI_ADJUSTMENTS.includes(adjust as HijriAdjustment)) out.hijriAdjust = adjust as HijriAdjustment;
   return out;
 }
 
