@@ -60,6 +60,15 @@ export default function HomeScreen() {
 
       {resume && <ContinueCard session={resume} reducedMotion={settings.reducedMotion} />}
 
+      <Card onPress={() => router.push('/garden')} accessibilityLabel="Beertayda: geed kasta waa wareeg aad dhammaysay">
+        <AppText size={17} weight="extrabold">
+          Beertayda
+        </AppText>
+        <AppText size={13} color={colors.soft}>
+          Geed kasta waa wareeg aad dhammaysay.
+        </AppText>
+      </Card>
+
       <SectionTitle>Adkaarta maanta</SectionTitle>
       <Grid>
         {TODAY.map((c) => {
