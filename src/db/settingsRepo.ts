@@ -9,6 +9,8 @@ export interface AppSettings {
   transliteration: boolean;
   meaning: boolean;
   reducedMotion: boolean;
+  /** Count with Volume Down and undo with Volume Up on the counter screen. */
+  volumeKeys: boolean;
   /** City id from the city list, or "custom". */
   city: string;
   /** JSON {lat, lng, name} when city === "custom". */
@@ -24,6 +26,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   transliteration: true,
   meaning: true,
   reducedMotion: false,
+  volumeKeys: false,
   city: 'muqdisho',
   customCity: null,
   reminders: DEFAULT_REMINDER_SETTINGS,
@@ -37,6 +40,7 @@ const BOOL_KEYS = [
   'transliteration',
   'meaning',
   'reducedMotion',
+  'volumeKeys',
   'notificationsAsked',
 ] as const;
 

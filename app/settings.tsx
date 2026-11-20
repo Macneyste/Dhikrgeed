@@ -12,11 +12,16 @@ import type { AppSettings } from '@/db/settingsRepo';
 import { useSettings } from '@/hooks/useSettings';
 import { colors } from '@/theme/theme';
 
-type BoolKey = 'largeText' | 'haptics' | 'transliteration' | 'meaning' | 'reducedMotion';
+type BoolKey = 'largeText' | 'haptics' | 'volumeKeys' | 'transliteration' | 'meaning' | 'reducedMotion';
 
 const READING: { key: BoolKey; title: string; description: string }[] = [
   { key: 'largeText', title: 'Qoraal weyn', description: 'Qoraalka oo dhan ayaa la weyneynayaa.' },
   { key: 'haptics', title: 'Gariir', description: 'Gariir yar marka aad tiriso.' },
+  {
+    key: 'volumeKeys',
+    title: 'Ku tiri badhamada codka',
+    description: 'Codka hoos: hal tiro. Codka kor: ka noqo. Shaashadda tirinta oo keliya.',
+  },
   { key: 'transliteration', title: 'Sida loo akhriyo', description: 'Dikriga oo far Laatiin ah lagu qoray.' },
   { key: 'meaning', title: 'Macnaha Soomaaliga', description: 'Macnaha dikriga oo Af-Soomaali ah.' },
   {
