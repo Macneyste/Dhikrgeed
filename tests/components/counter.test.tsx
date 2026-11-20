@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import CounterScreen from '../../app/session/[collectionId]';
 import * as Haptics from 'expo-haptics';
 
+import { DEFAULT_SETTINGS, type AppSettings } from '../../src/db/settingsRepo';
+import { SettingsProvider } from '../../src/hooks/useSettings';
 import { resetFakeStore } from './fakeSessionService';
 
 // SQLite is replaced by an in-memory fake that uses the real core rules.
@@ -41,6 +43,17 @@ jest.mock('expo-keep-awake', () => {
   };
 });
 
+// Fake native volume-keys module: tests press keys through mockVolumeKey.
+let mockVolumeListener: ((key: 'up' | 'down') => void) | null = null;
+jest.mock('../../modules/volume-keys', () => ({
+  startVolumeKeys: (onKey: (key: 'up' | 'down') => void) => {
+    mockVolumeListener = onKey;
+    return () => {
+      mockVolumeListener = null;
+    };
+  },
+}));
+
 // ---------------------------------------------------------------------------
 
 let clock = 1_000_000;
@@ -63,16 +76,18 @@ async function tapTimes(times: number, advanceMs = 0) {
   }
 }
 
-async function renderCounter() {
+async function renderCounter(settings: Partial<AppSettings> = {}) {
   await render(
-    <SafeAreaProvider
-      initialMetrics={{
-        frame: { x: 0, y: 0, width: 390, height: 844 },
-        insets: { top: 0, left: 0, right: 0, bottom: 0 },
-      }}
-    >
-      <CounterScreen />
-    </SafeAreaProvider>,
+    <SettingsProvider initial={{ ...DEFAULT_SETTINGS, ...settings }}>
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { x: 0, y: 0, width: 390, height: 844 },
+          insets: { top: 0, left: 0, right: 0, bottom: 0 },
+        }}
+      >
+        <CounterScreen />
+      </SafeAreaProvider>
+    </SettingsProvider>,
   );
   await screen.findByTestId('tap-area');
 }
@@ -139,5 +154,26 @@ describe('counter screen', () => {
     expect(mockAwake).toBe(1);
     await screen.unmount();
     expect(mockAwake).toBe(0);
+  });
+
+  it('a Volume Down press counts once and Volume Up undoes', async () => {
+    await renderCounter({ volumeKeys: true });
+    expect(mockVolumeListener).not.toBeNull();
+    clock += 10;
+    await act(async () => mockVolumeListener!('down'));
+    expect(screen.getByText('DIKRI 1 / 3 · 1 / 100')).toBeTruthy();
+    clock += 10;
+    await act(async () => mockVolumeListener!('up'));
+    expect(screen.getByText('DIKRI 1 / 3 · 0 / 100')).toBeTruthy();
+  });
+
+  it('leaves the volume keys alone when the setting is off and after leaving', async () => {
+    await renderCounter({ volumeKeys: false });
+    expect(mockVolumeListener).toBeNull();
+    await screen.unmount();
+    await renderCounter({ volumeKeys: true });
+    expect(mockVolumeListener).not.toBeNull();
+    await screen.unmount();
+    expect(mockVolumeListener).toBeNull();
   });
 });
