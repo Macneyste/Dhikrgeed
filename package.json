@@ -14,7 +14,8 @@
     "security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/security-check.ts",
     "check": "npm run typecheck && npm run lint && npm test && npm run test:components && npm run validate:content && npm run security",
     "format": "prettier --write \"app/**/*.tsx\" \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" \"tests/**/*.ts\"",
-    "test:components": "jest"
+    "test:components": "jest",
+    "setup:hooks": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@expo-google-fonts/amiri": "^0.4.1",

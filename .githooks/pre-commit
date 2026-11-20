@@ -1,0 +1,21 @@
+#!/bin/sh
+# Blocks private files and runs the unit tests before every commit.
+# Enable with: npm run setup:hooks
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+blocked=$(printf '%s\n' "$staged" | grep -E \
+  '(^|/)\.env($|\.)|\.(jks|keystore|p8|p12|pem|key|apk|aab|ipa)$|(^|/)(google-services\.json|GoogleService-Info\.plist|credentials\.json|keystore\.properties)$|(^|/)service-account[^/]*\.json$|^(node_modules|android|ios|\.expo|dist)/' \
+  | grep -vE '(^|/)\.env\.example$')
+
+if [ -n "$blocked" ]; then
+  echo "pre-commit: refusing to commit private or generated files:" >&2
+  printf '  %s\n' $blocked >&2
+  echo "Unstage them with: git restore --staged <file>" >&2
+  exit 1
+fi
+
+npm test --silent || {
+  echo "pre-commit: npm test failed. Fix the tests before committing." >&2
+  exit 1
+}
