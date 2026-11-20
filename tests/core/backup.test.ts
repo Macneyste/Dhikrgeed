@@ -168,8 +168,8 @@ test('duplicate ids and two active rounds for one collection are refused', () =>
 
 test('malicious strings are sanitized or refused', () => {
   const b = sample();
-  b.customDhikr[0].title = '‮evil\u0000 name';
-  b.sessions[0].items[0].snapshot.label = 'x⁦y\u0007';
+  b.customDhikr[0].title = '\u202Eevil\u0000 name';
+  b.sessions[0].items[0].snapshot.label = 'x\u2066y\u0007';
   const r = parseBackup(json(b));
   assert.ok(r.ok);
   if (!r.ok) return;
