@@ -1,3 +1,4 @@
+import { useKeepAwake } from 'expo-keep-awake';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -94,6 +95,7 @@ export default function CounterScreen() {
 
   return (
     <Scene>
+      {!complete && <KeepAwake />}
       {/* Tap area: everything above the cards. Pressable cancels when a scroll starts. */}
       <Pressable
         testID="tap-area"
@@ -262,6 +264,12 @@ export default function CounterScreen() {
       </Sheet>
     </Scene>
   );
+}
+
+/** Keeps the screen on while mounted: only while counting on this screen. */
+function KeepAwake() {
+  useKeepAwake('counter');
+  return null;
 }
 
 function Divider({ color }: { color: string }) {

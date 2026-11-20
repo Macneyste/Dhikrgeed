@@ -24,6 +24,21 @@ jest.mock('expo-haptics', () => ({
   NotificationFeedbackType: { Success: 'success' },
 }));
 
+// Tracks whether a keep-awake lock is held (acquired on mount, released on unmount).
+let mockAwake = 0;
+jest.mock('expo-keep-awake', () => {
+  const { useEffect } = require('react');
+  return {
+    useKeepAwake: () =>
+      useEffect(() => {
+        mockAwake += 1;
+        return () => {
+          mockAwake -= 1;
+        };
+      }, []),
+  };
+});
+
 // ---------------------------------------------------------------------------
 
 let clock = 1_000_000;
@@ -108,5 +123,19 @@ describe('counter screen', () => {
     expect(Haptics.selectionAsync).toHaveBeenCalledTimes(2);
     await fireEvent.press(screen.getByLabelText('Ka noqo tirintii ugu dambaysay'));
     expect(Haptics.impactAsync).toHaveBeenCalledWith(Haptics.ImpactFeedbackStyle.Light);
+  });
+
+  it('keeps the screen awake while counting and releases it on completion and leave', async () => {
+    mockCollectionId = 'tiny';
+    mockAwake = 0;
+    await renderCounter();
+    expect(mockAwake).toBe(1);
+    await tapTimes(2, 10);
+    expect(screen.getByText('DHAMMAYSTIRAN · 2 / 2')).toBeTruthy();
+    expect(mockAwake).toBe(0);
+    await fireEvent.press(screen.getByLabelText('Wareeg cusub'));
+    expect(mockAwake).toBe(1);
+    await screen.unmount();
+    expect(mockAwake).toBe(0);
   });
 });
