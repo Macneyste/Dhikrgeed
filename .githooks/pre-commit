@@ -21,8 +21,7 @@ out=$(npm test --silent 2>&1) || {
   exit 1
 }
 out=$(npm run security --silent 2>&1) || {
-  printf '%s
-' "$out" >&2
+  printf '%s\n' "$out" >&2
   echo "pre-commit: security check failed." >&2
   exit 1
 }
